@@ -1,0 +1,20 @@
+= generators-jvm
+Pedro Lamarão <pedro.lamarao@gmail.com>
+
+== to do
+
+- benchmark `CsvReader` with JMH against OpenCSV: https://opencsv.sourceforge.net/
+- `LineReader`
+- `JsonReader`
+- `TomlReader`
+- `BerReader`
+- `RsaPrivateKeyReader`
+- `RsaPublicKeyReader`
+- `PrivateKeyInfoReader`
+- `PublicKeyInfoReader`
+
+== done
+
+- `Generators.iterator`
+- `CsvReader`
+- `AbstractGenerator`

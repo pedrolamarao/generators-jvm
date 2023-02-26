@@ -1,0 +1,48 @@
+= generators-jvm
+Pedro Lamarao <pedro.lamarao@gmail.com>
+
+Continuation-based generators for the JVM.
+
+Module `generators` contain the core classes.
+
+Applications are demonstrated in `readers`.
+
+== using
+
+JARs are currently not published anywhere.
+
+To configure a Gradle project:
+
+.build.gradle.kts
+[source,gradle]
+----
+plugins {
+    id("java")
+}
+
+dependencies {
+    implementation("br.dev.pedrolamarao.generators:generators:1.0-SNAPSHOT")
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.compilerArgs = listOf("--add-exports","java.base/jdk.internal.vm=br.dev.pedrolamarao.generators","--enable-preview")
+}
+
+tasks.withType<Test>().configureEach {
+    jvmArgs = listOf("--add-exports","java.base/jdk.internal.vm=br.dev.pedrolamarao.generators","--enable-preview")
+}
+----
+
+== building
+
+Have `JAVA_HOME` point to a JDK version up to 19.
+
+Create file `gradle.properties` to configure the location for a JDK 20.
+
+Example `gradle.properties`:
+
+----
+org.gradle.java.installations.paths=/opt/jdk-20
+----
+
+Finally, run: `./gradlew build`
