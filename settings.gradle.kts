@@ -14,3 +14,4 @@ rootProject.name = "generators-jvm"
 
 include("generators")
 include("readers:csv")
+include("readers:line")
