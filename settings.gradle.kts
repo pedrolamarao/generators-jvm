@@ -1,3 +1,9 @@
+pluginManagement {
+    plugins {
+        id("me.champeau.jmh") version "0.7.0"
+    }
+}
+
 dependencyResolutionManagement {
     repositories {
         mavenCentral()

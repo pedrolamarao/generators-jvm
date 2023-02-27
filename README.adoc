@@ -35,14 +35,6 @@ tasks.withType<Test>().configureEach {
 
 == building
 
-Have `JAVA_HOME` point to a JDK version up to 19.
+Have `JAVA_HOME` point to a JDK version 19.
 
-Create file `gradle.properties` to configure the location for a JDK 20.
-
-Example `gradle.properties`:
-
-----
-org.gradle.java.installations.paths=/opt/jdk-20
-----
-
-Finally, run: `./gradlew build`
+Then, run: `./gradlew build`

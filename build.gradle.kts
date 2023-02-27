@@ -11,14 +11,11 @@ subprojects {
     plugins.withType<JavaPlugin>().configureEach {
         extensions.getByType<JavaPluginExtension>().apply {
             toolchain {
-                languageVersion.set( JavaLanguageVersion.of(20) )
+                languageVersion.set( JavaLanguageVersion.of(19) )
             }
         }
-        tasks.withType<JavaCompile>().configureEach {
-            options.compilerArgs = listOf("--add-exports","java.base/jdk.internal.vm=br.dev.pedrolamarao.generators","--enable-preview")
-        }
         tasks.withType<Test>().configureEach {
-            jvmArgs = listOf("--add-exports","java.base/jdk.internal.vm=br.dev.pedrolamarao.generators","--enable-preview")
+            jvmArgs = listOf("--add-exports","java.base/jdk.internal.vm=br.dev.pedrolamarao.generators,ALL-UNNAMED","--enable-preview")
         }
     }
 }

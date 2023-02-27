@@ -7,6 +7,8 @@ import java.io.Reader;
 
 public class CsvReader extends AbstractGenerator<String>
 {
+    public static final String SENTINEL = new String();
+
     private final Reader reader;
 
     private final char separator;
@@ -27,7 +29,7 @@ public class CsvReader extends AbstractGenerator<String>
     {
         try
         {
-            final var builder = new StringBuilder();
+            final var builder = new StringBuilder(1024);
 
             int c = reader.read();
             while (c != -1) {
@@ -43,7 +45,7 @@ public class CsvReader extends AbstractGenerator<String>
             }
 
             while (true) {
-                this.yield(null);
+                this.yield(SENTINEL);
             }
         }
         catch (IOException e)
