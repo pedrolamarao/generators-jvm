@@ -7,7 +7,7 @@ import java.io.StringReader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class LineReaderTest
+public class LineGeneratorTest
 {
     @Test
     public void test ()
@@ -18,7 +18,7 @@ foo,bar,1.0, ,
 meh,duh,2.22,
         """;
 
-        final var reader = new LineReader( new StringReader(text), 8 );
+        final var reader = new LineGenerator( new StringReader(text), 8 );
 
         assertEquals( "foo,bar,1.0, ,", reader.next() );
         assertEquals( "meh,duh,2.22,", reader.next() );

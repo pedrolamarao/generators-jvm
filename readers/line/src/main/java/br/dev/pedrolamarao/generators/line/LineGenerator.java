@@ -5,7 +5,7 @@ import br.dev.pedrolamarao.generators.AbstractGenerator;
 import java.io.IOException;
 import java.io.Reader;
 
-public class LineReader extends AbstractGenerator<String>
+public class LineGenerator extends AbstractGenerator<String>
 {
     private final char[] buffer;
 
@@ -15,7 +15,7 @@ public class LineReader extends AbstractGenerator<String>
 
     private final Reader reader;
 
-    public LineReader (Reader reader, int capacity)
+    public LineGenerator(Reader reader, int capacity)
     {
         this.buffer = new char[capacity];
         this.reader = reader;
@@ -53,7 +53,8 @@ public class LineReader extends AbstractGenerator<String>
                     if (mark == '\n') {
                         builder.append(buffer,position,markPosition - position);
                         position = markPosition + 1;
-                        this.yield( builder.toString() );
+                        next = builder.toString();
+                        this.yield();
                         builder.setLength(0);
                     }
                     else {
@@ -63,9 +64,8 @@ public class LineReader extends AbstractGenerator<String>
                 }
             }
 
-            while (true) {
-                this.yield(null);
-            }
+            next = null;
+            this.yield();
         }
         catch (IOException e)
         {
