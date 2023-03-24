@@ -17,5 +17,6 @@ dependencyResolutionManagement {
 rootProject.name = "generators-jvm"
 
 include("generators")
+include("readers:ber")
 include("readers:csv")
 include("readers:line")
