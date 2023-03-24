@@ -9,7 +9,7 @@ public abstract class AbstractGenerator<T> implements Generator<T>
 
     private final Continuation continuation;
 
-    protected T next;
+    private T next;
 
     public AbstractGenerator ()
     {
@@ -24,8 +24,9 @@ public abstract class AbstractGenerator<T> implements Generator<T>
 
     protected abstract void run ();
 
-    protected final void yield ()
+    protected final void yield (T value)
     {
+        next = value;
         Continuation.yield(scope);
     }
 }

@@ -53,8 +53,7 @@ public class LineAbstractGenerator extends AbstractGenerator<String>
                     if (mark == '\n') {
                         builder.append(buffer,position,markPosition - position);
                         position = markPosition + 1;
-                        next = builder.toString();
-                        this.yield();
+                        this.yield(builder.toString());
                         builder.setLength(0);
                     }
                     else {
@@ -64,7 +63,7 @@ public class LineAbstractGenerator extends AbstractGenerator<String>
                 }
             }
 
-            next = null;
+            this.yield(null);
         }
         catch (IOException e)
         {
