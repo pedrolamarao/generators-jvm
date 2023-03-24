@@ -15,7 +15,7 @@ subprojects {
             }
         }
         tasks.withType<Test>().configureEach {
-            jvmArgs = listOf("--add-exports","java.base/jdk.internal.vm=br.dev.pedrolamarao.generators,ALL-UNNAMED","--enable-preview")
+            jvmArgs = listOf("--add-exports","java.base/jdk.internal.vm=ALL-UNNAMED","--enable-preview")
         }
     }
 }
