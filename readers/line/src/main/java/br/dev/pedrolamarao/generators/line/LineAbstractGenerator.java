@@ -5,7 +5,7 @@ import br.dev.pedrolamarao.generators.AbstractGenerator;
 import java.io.IOException;
 import java.io.Reader;
 
-public class LineGenerator extends AbstractGenerator<String>
+public class LineAbstractGenerator extends AbstractGenerator<String>
 {
     private final char[] buffer;
 
@@ -15,7 +15,7 @@ public class LineGenerator extends AbstractGenerator<String>
 
     private final Reader reader;
 
-    public LineGenerator(Reader reader, int capacity)
+    public LineAbstractGenerator(Reader reader, int capacity)
     {
         this.buffer = new char[capacity];
         this.reader = reader;
@@ -65,7 +65,6 @@ public class LineGenerator extends AbstractGenerator<String>
             }
 
             next = null;
-            this.yield();
         }
         catch (IOException e)
         {

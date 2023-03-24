@@ -24,9 +24,15 @@ public class NewBenchmark
     }
 
     @Benchmark
-    public Object generator ()
+    public Object abstractGenerator ()
     {
-        return new LineGenerator(new StringReader(data()),8192);
+        return new LineAbstractGenerator(new StringReader(data()),8192);
+    }
+
+    @Benchmark
+    public Object runnableGenerator ()
+    {
+        return new LineRunnableGenerator(new StringReader(data()),8192);
     }
 
     public static String data ()

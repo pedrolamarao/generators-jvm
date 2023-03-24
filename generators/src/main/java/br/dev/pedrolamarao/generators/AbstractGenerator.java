@@ -1,16 +1,19 @@
 package br.dev.pedrolamarao.generators;
 
+import jdk.internal.vm.Continuation;
+import jdk.internal.vm.ContinuationScope;
+
 public abstract class AbstractGenerator<T> implements Generator<T>
 {
-    private final jdk.internal.vm.Continuation continuation;
+    private static final ContinuationScope scope = new ContinuationScope("AbstractGenerator");
 
-    private static final jdk.internal.vm.ContinuationScope scope = new jdk.internal.vm.ContinuationScope("AbstractGenerator");
+    private final Continuation continuation;
 
     protected T next;
 
     public AbstractGenerator ()
     {
-        this.continuation = new jdk.internal.vm.Continuation(scope,this::run);
+        this.continuation = new Continuation(scope,this::run);
     }
 
     public final T next ()
@@ -23,6 +26,6 @@ public abstract class AbstractGenerator<T> implements Generator<T>
 
     protected final void yield ()
     {
-        continuation.yield(scope);
+        Continuation.yield(scope);
     }
 }

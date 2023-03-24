@@ -61,22 +61,49 @@ public class NextBenchmark
     }
 
     @State(Scope.Benchmark)
-    public static class GeneratorState
+    public static class AbstractGeneratorState
     {
         int counter;
 
-        LineGenerator generator;
+        LineAbstractGenerator generator;
 
         @Setup(Level.Invocation)
         public void setup ()
         {
             counter = 0;
-            generator = new LineGenerator(new StringReader(data()),8192);
+            generator = new LineAbstractGenerator(new StringReader(data()),8192);
         }
     }
 
     @Benchmark
-    public long generator (GeneratorState it)
+    public long abstractGenerator (AbstractGeneratorState it)
+    {
+        while (true) {
+            final var line = it.generator.next();
+            if (line == null) break;
+            ++it.counter;
+        }
+        if (it.counter != lines) throw new RuntimeException("unexpected counter: " + it.counter);
+        return it.counter;
+    }
+
+    @State(Scope.Benchmark)
+    public static class RunnableGeneratorState
+    {
+        int counter;
+
+        LineRunnableGenerator generator;
+
+        @Setup(Level.Invocation)
+        public void setup ()
+        {
+            counter = 0;
+            generator = new LineRunnableGenerator(new StringReader(data()),8192);
+        }
+    }
+
+    @Benchmark
+    public long runnableGenerator (RunnableGeneratorState it)
     {
         while (true) {
             final var line = it.generator.next();
