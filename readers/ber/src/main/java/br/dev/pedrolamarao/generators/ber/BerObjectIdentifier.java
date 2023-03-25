@@ -1,5 +1,5 @@
 package br.dev.pedrolamarao.generators.ber;
 
-public record BerObjectIdentifier() implements BerObject
+public record BerObjectIdentifier(byte[] bytes) implements BerObject
 {
 }

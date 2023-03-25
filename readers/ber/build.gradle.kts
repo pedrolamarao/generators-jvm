@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     implementation(project(":generators"))
+    testImplementation("org.hamcrest:hamcrest:2.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
 }
 
