@@ -4,6 +4,8 @@ import br.dev.pedrolamarao.generators.AbstractGenerator;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.function.Consumer;
 
 public class BerParser
@@ -11,9 +13,7 @@ public class BerParser
     public static void parse (InputStream stream, Consumer<BerObject> consumer) throws IOException
     {
         final int type = stream.read();
-        if (type == -1) {
-            return;
-        }
+        if (type == -1) throw new IOException();
 
         final int tag;
         {
@@ -32,9 +32,7 @@ public class BerParser
         final int length;
         {
             final int b0 = stream.read();
-            if (b0 == -1) {
-                return;
-            }
+            if (b0 == -1) throw new IOException();
 
             if ((b0 & 0x80) == 0)
             {
@@ -45,12 +43,12 @@ public class BerParser
             {
                 if (b0 != 0x80)
                 {
+                    // definite long length
+                    final byte[] bytes = new byte[b0 & 0x7F];
+                    final int read = stream.read(bytes);
+                    if (read == -1) throw new IOException();
                     int tmp = 0;
-                    for (int i = 0, j = (b0 & 0x7F); i != j; ++i) {
-                        final int b1 = stream.read();
-                        if (b1 == -1) {
-                            return;
-                        }
+                    for (var b1 : bytes) {
                         tmp <<= 8;
                         tmp |= (b1 & 0xFF);
                     }
@@ -68,29 +66,16 @@ public class BerParser
         {
             // primitive
 
+            final byte[] bytes = new byte[length];
+            final int r0 = stream.read(bytes);
+            if (r0 == -1) throw new IOException();
+
             final var object = switch (tag)
             {
-                case 2 -> {
-                    // #TODO
-                    final byte[] bytes = new byte[length];
-                    final int r0 = stream.read(bytes);
-                    if (r0 == -1) yield null;
-                    yield new BerInteger(bytes);
-                }
-                case 3, 4 -> {
-                    final byte[] bytes = new byte[length];
-                    final int r0 = stream.read(bytes);
-                    if (r0 == -1) yield null;
-                    yield new BerBytes(bytes);
-                }
+                case 2 -> new BerInteger(bytes);
+                case 3, 4 -> new BerBytes(bytes);
                 case 5 -> new BerNull();
-                case 6 -> {
-                    // #TODO
-                    final byte[] bytes = new byte[length];
-                    final int r0 = stream.read(bytes);
-                    if (r0 == -1) yield null;
-                    yield new BerObjectIdentifier(bytes);
-                }
+                case 6 -> new BerObjectIdentifier(bytes);
                 default -> throw new RuntimeException("unsupported tag: " + tag);
             };
 
