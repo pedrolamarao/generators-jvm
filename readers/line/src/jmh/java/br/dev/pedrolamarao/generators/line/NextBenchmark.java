@@ -40,22 +40,24 @@ public class NextBenchmark
     @State(Scope.Benchmark)
     public static class ParserState
     {
+        final char[] buffer = new char[8192];
+
         int counter;
 
-        LineParser parser;
+        Reader reader;
 
         @Setup(Level.Invocation)
         public void setup ()
         {
             counter = 0;
-            parser = new LineParser(new StringReader(data()),8192);
+            reader = new StringReader( data() );
         }
     }
 
     @Benchmark
-    public long parser (ParserState it)
+    public long parser (ParserState it) throws IOException
     {
-        it.parser.run(line -> ++it.counter);
+        LineParser.parse(it.reader,it.buffer, line -> ++it.counter);
         if (it.counter != lines) throw new RuntimeException("unexpected counter: " + it.counter);
         return it.counter;
     }

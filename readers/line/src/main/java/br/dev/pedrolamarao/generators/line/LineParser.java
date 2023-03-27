@@ -2,68 +2,60 @@ package br.dev.pedrolamarao.generators.line;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.CharBuffer;
 import java.util.function.Consumer;
 
 public class LineParser
 {
-    private final char[] buffer;
-
-    private int position = 0;
-
-    private int limit = 0;
-
-    private final Reader reader;
-
-    public LineParser (Reader reader, int capacity)
+    public static void parse (Reader reader, char[] buffer, Consumer<CharSequence> consumer) throws IOException
     {
-        this.buffer = new char[capacity];
-        this.reader = reader;
-    }
+        final var remainder = new StringBuilder();
 
-    int read () throws IOException
-    {
-        final int read = reader.read(buffer,0,buffer.length);
-        if (read == -1) return read;
-        position = 0;
-        limit = read;
-        return read;
-    }
-
-    public void run (Consumer<String> consumer)
-    {
-        try
+        while (true)
         {
-            final var builder = new StringBuilder();
+            final int limit = reader.read(buffer,0,buffer.length);
+            if (limit == -1) break;
 
-            while (read() != -1) {
-                while (position < limit) {
-                    int mark = -1;
-                    int markPosition = -1;
-                    for (int i = position; i != limit; ++i) {
-                        final int c = buffer[i];
-                        if (c == '\n') {
-                            mark = c;
-                            markPosition = i;
-                            break;
-                        }
-                    }
-
-                    if (mark == '\n') {
-                        builder.append(buffer,position,markPosition - position);
-                        position = markPosition + 1;
-                        consumer.accept( builder.toString() );
-                        builder.setLength(0);
-                    }
-                    else {
-                        builder.append(buffer,position,limit - position);
-                        position = limit;
-                    }
+            final int first;
+            if (remainder.isEmpty()) {
+                first = 0;
+            }
+            else {
+                final int position = find(buffer,0,limit,'\n');
+                if (position == -1) {
+                    remainder.append(buffer,0,limit);
+                    continue;
+                }
+                else {
+                    remainder.append(buffer,0,position);
+                    consumer.accept(remainder.toString());
+                    remainder.setLength(0);
+                    first = position + 1;
                 }
             }
+
+            int current = first;
+            while (current < limit) {
+                final int position = find(buffer,current,limit,'\n');
+                if (position == -1) break;
+                consumer.accept( CharBuffer.wrap(buffer,current,position-current) );
+                current = position + 1;
+            }
+
+            if (current < limit) {
+                remainder.append(buffer, current, limit - current);
+            }
         }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
+
+        if (! remainder.isEmpty())
+            consumer.accept(remainder.toString());
+    }
+
+    static int find (char[] buffer, int position, int limit, char target)
+    {
+        for (int i = position, j = limit; i != j; ++i)
+            if (buffer[i] == target)
+                return i;
+        return -1;
     }
 }

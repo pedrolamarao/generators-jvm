@@ -12,15 +12,9 @@ public class NewBenchmark
     static final int lines = 10240;
 
     @Benchmark
-    public Object reader () throws Exception
+    public Object reader ()
     {
         return new BufferedReader(new StringReader(data()),8192);
-    }
-
-    @Benchmark
-    public Object parser ()
-    {
-        return new LineParser(new StringReader(data()),8192);
     }
 
     @Benchmark
