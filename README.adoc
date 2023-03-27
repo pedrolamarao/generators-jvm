@@ -3,11 +3,32 @@ Pedro Lamarao <pedro.lamarao@gmail.com>
 
 Continuation-based generators for the JVM.
 
-Module `generators` contain the core classes.
+Module `generators` contain the core classes, `AbstractGenerator` and `RunnableGenerator`.
 
 Applications are demonstrated in `readers`.
 
+== building
+
+Have `JAVA_HOME` point to a JDK version 19.
+
+Compilation will use a JDK version 20 automatically provisioned by Gradle.
+
+To build and run automated tests: `./gradlew build`
+
+To build benchmarks: `./gradlew jmhJar`
+
+To run benchmarks: `./gradlew jmh`
+
+You may manually run a benchmark by doing something like:
+
+[source,shell]
+----
+java --add-exports java.base/jdk.internal.vm=ALL-UNNAMED --enable-preview -jar .\readers\ber\build\libs\ber-1.0-SNAPSHOT-jmh.jar -h
+----
+
 == using
+
+Compiling with a JDK version 20 is required.
 
 JARs are currently not published anywhere.
 
@@ -32,9 +53,3 @@ tasks.withType<Test>().configureEach {
     jvmArgs = listOf("--add-exports","java.base/jdk.internal.vm=br.dev.pedrolamarao.generators","--enable-preview")
 }
 ----
-
-== building
-
-Have `JAVA_HOME` point to a JDK version 19.
-
-Then, run: `./gradlew build`
