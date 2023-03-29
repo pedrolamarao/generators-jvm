@@ -3,7 +3,7 @@ package br.dev.pedrolamarao.generators.ber;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class BoundedInputStream extends InputStream
+final class BoundedInputStream extends InputStream
 {
     private int remaining;
 
