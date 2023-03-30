@@ -4,44 +4,59 @@ import br.dev.pedrolamarao.generators.ber.*;
 import br.dev.pedrolamarao.generators.rsa.RsaPrivateKeyReader;
 
 import java.io.ByteArrayInputStream;
+import java.math.BigInteger;
 import java.security.PrivateKey;
+import java.util.Arrays;
 
 public final class PrivateKeyInfoReader
 {
+    static final byte[] rsa = { 42, -122, 72, -122, -9, 13, 1, 1, 1 };
+
     public static PrivateKey read (BerReader reader)
     {
-        if (! (reader.read() instanceof BerOpen privateKeyInfo_open))
+        if (! (reader.read() instanceof BerOpen)) // privateKeyInfo.open
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerInteger privateKeyInfo_version))
+        if (! (reader.read() instanceof BerInteger version)) // privateKeyInfo.version
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerOpen privateKeyInfo_privateKeyAlgorithm_open))
+        if (! version.asBigInteger().equals(BigInteger.ZERO))
+            throw new RuntimeException("unsupported version");
+
+        if (! (reader.read() instanceof BerOpen)) // privateKeyInfo.privateKeyAlgorithm.open
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerObjectIdentifier privateKeyInfo_privateKeyAlgorithm_algorithm))
+        if (! (reader.read() instanceof BerObjectIdentifier algorithm))
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerNull privateKeyInfo_privateKeyAlgorithm_parameters))
+        skip0(reader);
+
+        if (! (reader.read() instanceof BerClose)) // privateKeyInfo.privateKeyAlgorithm.close
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerClose privateKeyInfo_privateKeyAlgorithm_close))
+        if (! (reader.read() instanceof BerBytes privateKey))
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerBytes privateKeyInfo_privateKey))
+        if (! (reader.read() instanceof BerClose)) // privateKeyInfo.close
             throw new RuntimeException();
 
-        // #TODO: finish consuming reader
-
-        return read(
-            privateKeyInfo_privateKeyAlgorithm_algorithm,
-            privateKeyInfo_privateKey
-        );
+        if (Arrays.equals(algorithm.bytes(),rsa))
+            return RsaPrivateKeyReader.parse( new BerRunnableReader( new ByteArrayInputStream( privateKey.bytes() ) ) );
+        else
+            throw new RuntimeException();
     }
 
-    static PrivateKey read(BerObjectIdentifier ignored, BerBytes bytes)
+    static void skip0 (BerReader reader)
     {
-        // #TODO: actually consider identifier
-        return RsaPrivateKeyReader.parse( new BerRunnableReader( new ByteArrayInputStream( bytes.value() ) ) );
+        if (reader.read() instanceof BerOpen)
+            skip1(reader);
+    }
+
+    static void skip1 (BerReader reader)
+    {
+        BerObject object;
+        while (! ((object = reader.read()) instanceof BerClose))
+            if (object instanceof BerOpen)
+                skip1(reader);
     }
 }
