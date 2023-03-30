@@ -7,13 +7,14 @@ Pedro Lamarão <pedro.lamarao@gmail.com>
 - `csv`
 - `http`
 - `json`
-- `pkix` (`SubjectPublicKeyInfoReader`)
 - `toml`
 - `xml`
+- `x500` (`Attribute`,`Certificate`,`SubjectPublicKeyIdentifier`)
 
 == done
 
-- `akp` (`PrivateKeyInfoReader`)
+- `x500` (`AlgorithmIdentifier`)
+- `akp`
 - `rsa`
 - `ber`
 - `RunnableGenerator`

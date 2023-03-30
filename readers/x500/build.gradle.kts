@@ -7,7 +7,6 @@ dependencies {
     implementation(project(":generators"))
     implementation(project(":readers:ber"))
     implementation(project(":readers:rsa"))
-    implementation(project(":readers:x500"))
     testImplementation("org.hamcrest:hamcrest:2.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
     testImplementation("org.bouncycastle:bcprov-jdk18on:1.72")
