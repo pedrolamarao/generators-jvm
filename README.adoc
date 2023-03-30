@@ -9,9 +9,10 @@ Applications are demonstrated in `readers`.
 
 == building
 
-Have `JAVA_HOME` point to a JDK version 19.
+Have `JAVA_HOME` point to a JDK version up to 19.
 
 Compilation will use a JDK version 20 automatically provisioned by Gradle.
+Alternatively, see: https://docs.gradle.org/8.1-rc-2/userguide/toolchains.html
 
 To build and run automated tests: `./gradlew build`
 
@@ -28,7 +29,7 @@ java --add-exports java.base/jdk.internal.vm=ALL-UNNAMED --enable-preview -jar .
 
 == using
 
-Compiling with a JDK version 20 is required.
+The generators module require JDK version 20 with preview features enabled.
 
 JARs are currently not published anywhere.
 
