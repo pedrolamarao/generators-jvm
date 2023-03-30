@@ -5,16 +5,22 @@ import br.dev.pedrolamarao.generators.AbstractGenerator;
 import java.io.IOException;
 import java.io.Reader;
 
-public class LineAbstractGenerator extends AbstractGenerator<String>
+public final class LineAbstractReader extends AbstractGenerator<String> implements LineReader
 {
     private final char[] buffer;
 
     private final Reader reader;
 
-    public LineAbstractGenerator (Reader reader, int capacity)
+    public LineAbstractReader (Reader reader, int capacity)
     {
         this.buffer = new char[capacity];
         this.reader = reader;
+    }
+
+    @Override
+    public String read ()
+    {
+        return this.next();
     }
 
     @Override

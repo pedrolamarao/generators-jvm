@@ -1,7 +1,7 @@
 package br.dev.pedrolamarao.generators.rsa;
 
-import br.dev.pedrolamarao.generators.ber.BerAbstractGenerator;
-import br.dev.pedrolamarao.generators.ber.BerRunnableGenerator;
+import br.dev.pedrolamarao.generators.ber.BerAbstractReader;
+import br.dev.pedrolamarao.generators.ber.BerRunnableReader;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -11,7 +11,7 @@ import java.security.interfaces.RSAPrivateCrtKey;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class RsaPrivateKeyTest
+public class RsaPrivateKeyReaderTest
 {
     @Test
     public void abstract_ () throws Exception
@@ -31,8 +31,8 @@ public class RsaPrivateKeyTest
             )
             .getEncoded();
 
-        final var parsed = RsaPrivateKeyParser.parse(
-            new BerAbstractGenerator(
+        final var parsed = RsaPrivateKeyReader.parse(
+            new BerAbstractReader(
                 new ByteArrayInputStream( encoded )
             )
         );
@@ -59,8 +59,8 @@ public class RsaPrivateKeyTest
             )
             .getEncoded();
 
-        final var parsed = RsaPrivateKeyParser.parse(
-            new BerRunnableGenerator(
+        final var parsed = RsaPrivateKeyReader.parse(
+            new BerRunnableReader(
                 new ByteArrayInputStream( encoded )
             )
         );

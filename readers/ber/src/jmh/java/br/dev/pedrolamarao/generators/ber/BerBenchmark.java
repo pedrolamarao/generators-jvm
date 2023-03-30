@@ -30,10 +30,10 @@ public class BerBenchmark
     @Benchmark
     public long abstractGenerator (Common it)
     {
-        final var generator = new BerAbstractGenerator( new ByteArrayInputStream( it.data ) );
+        final var reader = new BerAbstractReader( new ByteArrayInputStream( it.data ) );
         long counter = 0;
         while (true) {
-            final var next = generator.next();
+            final var next = reader.read();
             if (next == null) break;
             ++counter;
         }
@@ -79,10 +79,10 @@ public class BerBenchmark
     @Benchmark
     public long runnableGenerator (Common it)
     {
-        final var generator = new BerRunnableGenerator( new ByteArrayInputStream( it.data ) );
+        final var reader = new BerRunnableReader( new ByteArrayInputStream( it.data ) );
         long counter = 0;
         while (true) {
-            final var next = generator.next();
+            final var next = reader.read();
             if (next == null) break;
             ++counter;
         }

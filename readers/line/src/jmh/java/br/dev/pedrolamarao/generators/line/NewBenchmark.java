@@ -1,6 +1,8 @@
 package br.dev.pedrolamarao.generators.line;
 
-import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.State;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
@@ -20,13 +22,13 @@ public class NewBenchmark
     @Benchmark
     public Object abstractGenerator ()
     {
-        return new LineAbstractGenerator(new StringReader(data()),8192);
+        return new LineAbstractReader(new StringReader(data()),8192);
     }
 
     @Benchmark
     public Object runnableGenerator ()
     {
-        return new LineRunnableGenerator(new StringReader(data()),8192);
+        return new LineRunnableReader(new StringReader(data()),8192);
     }
 
     public static String data ()

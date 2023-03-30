@@ -1,7 +1,7 @@
 package br.dev.pedrolamarao.generators.rsa;
 
-import br.dev.pedrolamarao.generators.ber.BerAbstractGenerator;
-import br.dev.pedrolamarao.generators.ber.BerRunnableGenerator;
+import br.dev.pedrolamarao.generators.ber.BerAbstractReader;
+import br.dev.pedrolamarao.generators.ber.BerRunnableReader;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -11,7 +11,7 @@ import java.security.interfaces.RSAPublicKey;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class RsaPublicKeyTest
+public class RsaPublicKeyReaderTest
 {
     @Test
     public void abstract_ () throws Exception
@@ -21,8 +21,8 @@ public class RsaPublicKeyTest
 
         final var encoded = new org.bouncycastle.asn1.pkcs.RSAPublicKey(generated.getModulus(),generated.getPublicExponent()).getEncoded();
 
-        final var parsed = RsaPublicKeyParser.parse(
-            new BerAbstractGenerator(
+        final var parsed = RsaPublicKeyReader.parse(
+            new BerAbstractReader(
                 new ByteArrayInputStream( encoded )
             )
         );
@@ -39,8 +39,8 @@ public class RsaPublicKeyTest
 
         final var encoded = new org.bouncycastle.asn1.pkcs.RSAPublicKey(generated.getModulus(),generated.getPublicExponent()).getEncoded();
 
-        final var parsed = RsaPublicKeyParser.parse(
-            new BerRunnableGenerator(
+        final var parsed = RsaPublicKeyReader.parse(
+            new BerRunnableReader(
                 new ByteArrayInputStream( encoded )
             )
         );

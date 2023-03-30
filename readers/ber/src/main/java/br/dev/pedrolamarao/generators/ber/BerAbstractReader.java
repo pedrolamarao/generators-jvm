@@ -5,13 +5,19 @@ import br.dev.pedrolamarao.generators.AbstractGenerator;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class BerAbstractGenerator extends AbstractGenerator<BerObject>
+public final class BerAbstractReader extends AbstractGenerator<BerObject> implements BerReader
 {
     private final InputStream stream;
 
-    public BerAbstractGenerator (InputStream stream)
+    public BerAbstractReader (InputStream stream)
     {
         this.stream = stream;
+    }
+
+    @Override
+    public BerObject read ()
+    {
+        return this.next();
     }
 
     @Override

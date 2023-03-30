@@ -2,7 +2,10 @@ package br.dev.pedrolamarao.generators.line;
 
 import org.openjdk.jmh.annotations.*;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.stream.IntStream;
 
 @State(Scope.Benchmark)
@@ -11,7 +14,7 @@ public class NextBenchmark
     static final int lines = 10240;
 
     @State(Scope.Benchmark)
-    public static class ReaderState
+    public static class BufferedReaderState
     {
         int counter;
 
@@ -26,7 +29,7 @@ public class NextBenchmark
     }
 
     @Benchmark
-    public long reader (ReaderState it) throws Exception
+    public long bufferedReader (BufferedReaderState it) throws Exception
     {
         while (true) {
             final var line = it.reader.readLine();
@@ -67,13 +70,13 @@ public class NextBenchmark
     {
         int counter;
 
-        LineAbstractGenerator generator;
+        LineAbstractReader reader;
 
         @Setup(Level.Invocation)
         public void setup ()
         {
             counter = 0;
-            generator = new LineAbstractGenerator(new StringReader(data()),8192);
+            reader = new LineAbstractReader(new StringReader(data()),8192);
         }
     }
 
@@ -81,7 +84,7 @@ public class NextBenchmark
     public long abstractGenerator (AbstractGeneratorState it)
     {
         while (true) {
-            final var line = it.generator.next();
+            final var line = it.reader.read();
             if (line == null) break;
             ++it.counter;
         }
@@ -94,13 +97,13 @@ public class NextBenchmark
     {
         int counter;
 
-        LineRunnableGenerator generator;
+        LineRunnableReader reader;
 
         @Setup(Level.Invocation)
         public void setup ()
         {
             counter = 0;
-            generator = new LineRunnableGenerator(new StringReader(data()),8192);
+            reader = new LineRunnableReader(new StringReader(data()),8192);
         }
     }
 
@@ -108,7 +111,7 @@ public class NextBenchmark
     public long runnableGenerator (RunnableGeneratorState it)
     {
         while (true) {
-            final var line = it.generator.next();
+            final var line = it.reader.read();
             if (line == null) break;
             ++it.counter;
         }

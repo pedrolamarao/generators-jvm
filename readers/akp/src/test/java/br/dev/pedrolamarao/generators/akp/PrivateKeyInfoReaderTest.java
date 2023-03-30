@@ -1,7 +1,7 @@
 package br.dev.pedrolamarao.generators.akp;
 
-import br.dev.pedrolamarao.generators.ber.BerAbstractGenerator;
-import br.dev.pedrolamarao.generators.ber.BerRunnableGenerator;
+import br.dev.pedrolamarao.generators.ber.BerAbstractReader;
+import br.dev.pedrolamarao.generators.ber.BerRunnableReader;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -19,7 +19,7 @@ public class PrivateKeyInfoReaderTest
         final var keys = KeyPairGenerator.getInstance("RSA").generateKeyPair();
         final var generated = (RSAPrivateKey) keys.getPrivate();
         final var encoded = keys.getPrivate().getEncoded();
-        final var parsed = (RSAPrivateKey) PrivateKeyInfoReader.read( new BerAbstractGenerator( new ByteArrayInputStream(encoded ) ) );
+        final var parsed = (RSAPrivateKey) PrivateKeyInfoReader.read( new BerAbstractReader( new ByteArrayInputStream(encoded ) ) );
         assertThat( parsed.getModulus(), equalTo( generated.getModulus() ) );
         assertThat( parsed.getPrivateExponent(), equalTo( generated.getPrivateExponent() ) );
     }
@@ -30,7 +30,7 @@ public class PrivateKeyInfoReaderTest
         final var keys = KeyPairGenerator.getInstance("RSA").generateKeyPair();
         final var generated = (RSAPrivateKey) keys.getPrivate();
         final var encoded = keys.getPrivate().getEncoded();
-        final var parsed = (RSAPrivateKey) PrivateKeyInfoReader.read( new BerRunnableGenerator( new ByteArrayInputStream(encoded ) ) );
+        final var parsed = (RSAPrivateKey) PrivateKeyInfoReader.read( new BerRunnableReader( new ByteArrayInputStream(encoded ) ) );
         assertThat( parsed.getModulus(), equalTo( generated.getModulus() ) );
         assertThat( parsed.getPrivateExponent(), equalTo( generated.getPrivateExponent() ) );
     }

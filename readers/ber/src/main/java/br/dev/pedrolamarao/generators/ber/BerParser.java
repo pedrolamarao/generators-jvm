@@ -1,14 +1,10 @@
 package br.dev.pedrolamarao.generators.ber;
 
-import br.dev.pedrolamarao.generators.AbstractGenerator;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.function.Consumer;
 
-public class BerParser
+public final class BerParser
 {
     public static void parse (InputStream stream, Consumer<BerObject> consumer) throws IOException
     {

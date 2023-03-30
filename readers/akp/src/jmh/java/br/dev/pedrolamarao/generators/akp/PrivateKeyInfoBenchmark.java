@@ -1,7 +1,7 @@
 package br.dev.pedrolamarao.generators.akp;
 
-import br.dev.pedrolamarao.generators.ber.BerAbstractGenerator;
-import br.dev.pedrolamarao.generators.ber.BerRunnableGenerator;
+import br.dev.pedrolamarao.generators.ber.BerAbstractReader;
+import br.dev.pedrolamarao.generators.ber.BerRunnableReader;
 import org.openjdk.jmh.annotations.*;
 
 import java.io.ByteArrayInputStream;
@@ -35,7 +35,7 @@ public class PrivateKeyInfoBenchmark
     @Benchmark
     public PrivateKey abstractGenerator (Common it)
     {
-        return PrivateKeyInfoReader.read( new BerAbstractGenerator( new ByteArrayInputStream( it.data ) ) );
+        return PrivateKeyInfoReader.read( new BerAbstractReader( new ByteArrayInputStream( it.data ) ) );
     }
 
     @Benchmark
@@ -47,6 +47,6 @@ public class PrivateKeyInfoBenchmark
     @Benchmark
     public PrivateKey runnableGenerator (Common it)
     {
-        return PrivateKeyInfoReader.read( new BerRunnableGenerator( new ByteArrayInputStream( it.data ) ) );
+        return PrivateKeyInfoReader.read( new BerRunnableReader( new ByteArrayInputStream( it.data ) ) );
     }
 }
