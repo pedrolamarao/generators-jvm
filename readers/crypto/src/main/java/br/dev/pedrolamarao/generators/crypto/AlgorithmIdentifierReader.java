@@ -6,7 +6,7 @@ public final class AlgorithmIdentifierReader
 {
     public static AlgorithmIdentifier read (BerReader reader)
     {
-        if (! (reader.read() instanceof BerOpen)) // AlgorithmIdentifier.open
+        if (! (reader.read() instanceof BerOpen))
             throw new RuntimeException();
 
         if (! (reader.read() instanceof BerObjectIdentifier algorithm))
@@ -14,7 +14,7 @@ public final class AlgorithmIdentifierReader
 
         skip0(reader); // parameters
 
-        if (! (reader.read() instanceof BerClose)) // AlgorithmIdentifier.close
+        if (! (reader.read() instanceof BerClose))
             throw new RuntimeException();
 
         return new AlgorithmIdentifier(algorithm,null);
