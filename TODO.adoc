@@ -3,19 +3,21 @@ Pedro Lamarão <pedro.lamarao@gmail.com>
 
 == to do
 
-- `akp` reads `ECPrivateKey`
+- `crypto` `Attribute`
+- `crypto` `Certificate`
+- `crypto` `SubjectPublicKeyIdentifier`
+- `crypto` `ECPrivateKey`, `ECPublicKey`
 - `csv`
 - `http`
 - `json`
 - `toml`
 - `xml`
-- `x500` (`Attribute`,`Certificate`,`SubjectPublicKeyIdentifier`)
 
 == done
 
-- `x500` (`AlgorithmIdentifier`)
-- `akp`
-- `rsa`
+- `crypto` `AlgorithmIdentifier`
+- `crypto` `PrivateKeyInfo`
+- `crypto` `RSAPrivateKey`,`RSAPublicKey`
 - `ber`
 - `RunnableGenerator`
 - `line`

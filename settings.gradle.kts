@@ -18,6 +18,6 @@ rootProject.name = "generators-jvm"
 
 include("generators")
 
-arrayOf("akp","ber","csv","line","rsa","x500").forEach {
+arrayOf("ber","crypto","csv","line").forEach {
     include("readers:${it}")
 }
