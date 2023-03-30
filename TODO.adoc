@@ -3,15 +3,17 @@ Pedro Lamarão <pedro.lamarao@gmail.com>
 
 == to do
 
+- `akp` reads `ECPrivateKey`
 - `csv`
+- `http`
 - `json`
+- `pkix` (`SubjectPublicKeyInfoReader`)
 - `toml`
-- `pkix` (`PrivateKeyInfoReader`)
-- `akp` (`SubjectPublicKeyInfoReader`)
 - `xml`
 
 == done
 
+- `akp` (`PrivateKeyInfoReader`)
 - `rsa`
 - `ber`
 - `RunnableGenerator`

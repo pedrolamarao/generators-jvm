@@ -17,7 +17,7 @@ dependencyResolutionManagement {
 rootProject.name = "generators-jvm"
 
 include("generators")
-include("readers:ber")
-include("readers:csv")
-include("readers:line")
-include("readers:rsa")
+
+arrayOf("akp","ber","csv","line","rsa").forEach {
+    include("readers:${it}")
+}
