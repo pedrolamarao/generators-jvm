@@ -9,7 +9,7 @@ import java.security.interfaces.RSAPublicKey;
 
 public final class RsaPublicKeyReader
 {
-    public static RSAPublicKey parse (BerReader reader)
+    public static RSAPublicKey read(BerReader reader)
     {
         if (! (reader.read() instanceof BerOpen))
             throw new RuntimeException();

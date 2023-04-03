@@ -10,7 +10,7 @@ import java.security.interfaces.RSAPrivateKey;
 
 public final class RsaPrivateKeyReader
 {
-    public static RSAPrivateKey parse (BerReader reader)
+    public static RSAPrivateKey read(BerReader reader)
     {
         if (! (reader.read() instanceof BerOpen))
             throw new RuntimeException();

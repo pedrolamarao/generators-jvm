@@ -21,7 +21,7 @@ public class RsaPublicKeyReaderTest
 
         final var encoded = new org.bouncycastle.asn1.pkcs.RSAPublicKey(generated.getModulus(),generated.getPublicExponent()).getEncoded();
 
-        final var parsed = RsaPublicKeyReader.parse(
+        final var parsed = RsaPublicKeyReader.read(
             new BerAbstractReader(
                 new ByteArrayInputStream( encoded )
             )
@@ -39,7 +39,7 @@ public class RsaPublicKeyReaderTest
 
         final var encoded = new org.bouncycastle.asn1.pkcs.RSAPublicKey(generated.getModulus(),generated.getPublicExponent()).getEncoded();
 
-        final var parsed = RsaPublicKeyReader.parse(
+        final var parsed = RsaPublicKeyReader.read(
             new BerRunnableReader(
                 new ByteArrayInputStream( encoded )
             )

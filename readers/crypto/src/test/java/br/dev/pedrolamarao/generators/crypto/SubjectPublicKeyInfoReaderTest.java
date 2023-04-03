@@ -21,6 +21,8 @@ public class SubjectPublicKeyInfoReaderTest
         final var generated = (ECPublicKey) keys.getPublic();
         final var encoded = generated.getEncoded();
         final var parsed = (ECPublicKey) SubjectPublicKeyInfoReader.read( new BerAbstractReader( new ByteArrayInputStream(encoded) ) );
+        assertThat( parsed.getW().getAffineX(), equalTo( generated.getW().getAffineX()) );
+        assertThat( parsed.getW().getAffineY(), equalTo( generated.getW().getAffineY()) );
         assertThat( parsed.getParams(), equalTo( generated.getParams() ) );
     }
 
@@ -40,8 +42,12 @@ public class SubjectPublicKeyInfoReaderTest
     {
         final var keys = KeyPairGenerator.getInstance("EC").generateKeyPair();
         final var generated = (ECPublicKey) keys.getPublic();
+        final var x = generated.getW().getAffineX().toByteArray();
+        final var y = generated.getW().getAffineY().toByteArray();
         final var encoded = generated.getEncoded();
         final var parsed = (ECPublicKey) SubjectPublicKeyInfoReader.read( new BerRunnableReader( new ByteArrayInputStream(encoded) ) );
+        assertThat( parsed.getW().getAffineX(), equalTo( generated.getW().getAffineX()) );
+        assertThat( parsed.getW().getAffineY(), equalTo( generated.getW().getAffineY()) );
         assertThat( parsed.getParams(), equalTo( generated.getParams() ) );
     }
 

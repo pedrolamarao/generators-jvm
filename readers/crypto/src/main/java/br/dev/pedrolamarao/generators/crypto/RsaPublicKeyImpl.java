@@ -3,7 +3,7 @@ package br.dev.pedrolamarao.generators.crypto;
 import java.math.BigInteger;
 import java.security.interfaces.RSAPublicKey;
 
-public record RsaPublicKeyImpl(BigInteger exponent, BigInteger modulus) implements RSAPublicKey
+record RsaPublicKeyImpl (BigInteger exponent, BigInteger modulus) implements RSAPublicKey
 {
     @Override
     public BigInteger getPublicExponent ()

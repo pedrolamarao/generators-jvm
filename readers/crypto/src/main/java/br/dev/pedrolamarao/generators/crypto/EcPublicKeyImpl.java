@@ -1,20 +1,21 @@
 package br.dev.pedrolamarao.generators.crypto;
 
-import java.math.BigInteger;
-import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.ECPublicKey;
+import java.security.spec.ECParameterSpec;
+import java.security.spec.ECPoint;
 
-record RsaPrivateKeyImpl (BigInteger exponent, BigInteger modulus) implements RSAPrivateKey
+record EcPublicKeyImpl (ECPoint point) implements ECPublicKey
 {
     @Override
-    public BigInteger getPrivateExponent ()
+    public ECPoint getW ()
     {
-        return exponent;
+        return point;
     }
 
     @Override
     public String getAlgorithm ()
     {
-        return "RSA";
+        return "EC";
     }
 
     @Override
@@ -30,8 +31,8 @@ record RsaPrivateKeyImpl (BigInteger exponent, BigInteger modulus) implements RS
     }
 
     @Override
-    public BigInteger getModulus ()
+    public ECParameterSpec getParams ()
     {
-        return modulus;
+        return null;
     }
 }

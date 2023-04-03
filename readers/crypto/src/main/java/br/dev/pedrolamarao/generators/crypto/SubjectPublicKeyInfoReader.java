@@ -1,15 +1,21 @@
 package br.dev.pedrolamarao.generators.crypto;
 
-import br.dev.pedrolamarao.generators.ber.*;
+import br.dev.pedrolamarao.generators.ber.BerBits;
+import br.dev.pedrolamarao.generators.ber.BerClose;
+import br.dev.pedrolamarao.generators.ber.BerOpen;
+import br.dev.pedrolamarao.generators.ber.BerReader;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.security.PublicKey;
 import java.util.Arrays;
 
+import static br.dev.pedrolamarao.generators.crypto.AlgorithmIdentifier.EC;
+import static br.dev.pedrolamarao.generators.crypto.AlgorithmIdentifier.RSA;
+
 public final class SubjectPublicKeyInfoReader
 {
-    static final byte[] rsa = { 42, -122, 72, -122, -9, 13, 1, 1, 1 };
-
     public static PublicKey read (BerReader reader)
     {
         if (! (reader.read() instanceof BerOpen))
@@ -23,16 +29,27 @@ public final class SubjectPublicKeyInfoReader
         if (! (reader.read() instanceof BerClose))
             throw new RuntimeException();
 
-        if (Arrays.equals(algorithmIdentifier.algorithm().bytes(),rsa)) {
-            final var bytes = subjectPublicKey.bytes();
-            if (bytes[0] != 0) throw new RuntimeException();
-            return RsaPublicKeyReader.parse(
-                new BerRunnableReader(
-                    new ByteArrayInputStream(bytes,1,bytes.length-1)
-                )
+        final var keyBytes = subjectPublicKey.bytes();
+        if (keyBytes[0] != 0) throw new RuntimeException();
+
+        final var algorithmBytes = algorithmIdentifier.algorithm().bytes();
+        if (Arrays.equals(algorithmBytes,RSA))
+            return RsaPublicKeyReader.read(
+                create( reader.getClass(), new ByteArrayInputStream(keyBytes,1,keyBytes.length-1) )
             );
-        }
+        else if (Arrays.equals(algorithmBytes,EC))
+            return EcPublicKeyParser.parse(keyBytes,1,keyBytes.length-1);
         else
             throw new RuntimeException();
+    }
+
+    static BerReader create (Class<? extends BerReader> type, InputStream stream)
+    {
+        try {
+            return type.getConstructor(InputStream.class).newInstance(stream);
+        }
+        catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

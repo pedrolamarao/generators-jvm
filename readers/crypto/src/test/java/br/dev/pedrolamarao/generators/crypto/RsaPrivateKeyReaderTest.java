@@ -31,7 +31,7 @@ public class RsaPrivateKeyReaderTest
             )
             .getEncoded();
 
-        final var parsed = RsaPrivateKeyReader.parse(
+        final var parsed = RsaPrivateKeyReader.read(
             new BerAbstractReader(
                 new ByteArrayInputStream( encoded )
             )
@@ -59,7 +59,7 @@ public class RsaPrivateKeyReaderTest
             )
             .getEncoded();
 
-        final var parsed = RsaPrivateKeyReader.parse(
+        final var parsed = RsaPrivateKeyReader.read(
             new BerRunnableReader(
                 new ByteArrayInputStream( encoded )
             )
