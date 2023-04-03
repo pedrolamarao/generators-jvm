@@ -37,12 +37,11 @@ public final class BerParser
             }
             else
             {
-                if (b0 != 0x80)
+                final int count = b0 & 0x7F;
+                if (count != 0)
                 {
                     // definite long length
-                    final byte[] bytes = new byte[b0 & 0x7F];
-                    final int read = stream.read(bytes);
-                    if (read == -1) throw new IOException();
+                    final byte[] bytes = stream.readNBytes(count);
                     int tmp = 0;
                     for (var b1 : bytes) {
                         tmp <<= 8;
@@ -62,14 +61,13 @@ public final class BerParser
         {
             // primitive
 
-            final byte[] bytes = new byte[length];
-            final int r0 = stream.read(bytes);
-            if (r0 == -1) throw new IOException();
+            final byte[] bytes = stream.readNBytes(length);
 
             final var object = switch (tag)
             {
                 case 2 -> new BerInteger(bytes);
-                case 3, 4 -> new BerBytes(bytes);
+                case 3 -> new BerBits(bytes);
+                case 4 -> new BerBytes(bytes);
                 case 5 -> new BerNull();
                 case 6 -> new BerObjectIdentifier(bytes);
                 default -> throw new RuntimeException("unsupported tag: " + tag);

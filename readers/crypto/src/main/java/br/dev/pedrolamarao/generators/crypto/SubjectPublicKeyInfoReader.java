@@ -17,14 +17,21 @@ public final class SubjectPublicKeyInfoReader
 
         final var algorithmIdentifier = AlgorithmIdentifierReader.read(reader);
 
-        if (! (reader.read() instanceof BerBytes subjectPublicKey))
+        if (! (reader.read() instanceof BerBits subjectPublicKey))
             throw new RuntimeException();
 
         if (! (reader.read() instanceof BerClose))
             throw new RuntimeException();
 
-        if (Arrays.equals(algorithmIdentifier.algorithm().bytes(),rsa))
-            return RsaPublicKeyReader.parse( new BerRunnableReader( new ByteArrayInputStream( subjectPublicKey.bytes() ) ) );
+        if (Arrays.equals(algorithmIdentifier.algorithm().bytes(),rsa)) {
+            final var bytes = subjectPublicKey.bytes();
+            if (bytes[0] != 0) throw new RuntimeException();
+            return RsaPublicKeyReader.parse(
+                new BerRunnableReader(
+                    new ByteArrayInputStream(bytes,1,bytes.length-1)
+                )
+            );
+        }
         else
             throw new RuntimeException();
     }

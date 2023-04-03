@@ -49,7 +49,7 @@ public class SubjectPublicKeyInfoReaderTest
     public void runnable_rsa () throws Exception
     {
         final var keys = KeyPairGenerator.getInstance("RSA").generateKeyPair();
-        final var generated = (RSAPublicKey) keys.getPrivate();
+        final var generated = (RSAPublicKey) keys.getPublic();
         final var encoded = generated.getEncoded();
         final var parsed = (RSAPublicKey) SubjectPublicKeyInfoReader.read( new BerRunnableReader( new ByteArrayInputStream(encoded) ) );
         assertThat( parsed.getModulus(), equalTo( generated.getModulus() ) );

@@ -31,7 +31,11 @@ public final class PrivateKeyInfoReader
             throw new RuntimeException();
 
         if (Arrays.equals(algorithmIdentifier.algorithm().bytes(),rsa))
-            return RsaPrivateKeyReader.parse( new BerRunnableReader( new ByteArrayInputStream( privateKey.bytes() ) ) );
+            return RsaPrivateKeyReader.parse(
+                new BerRunnableReader(
+                    new ByteArrayInputStream(privateKey.bytes())
+                )
+            );
         else
             throw new RuntimeException();
     }
