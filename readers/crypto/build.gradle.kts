@@ -11,15 +11,6 @@ dependencies {
     testImplementation("org.bouncycastle:bcprov-jdk18on:1.72")
 }
 
-jmh {
-    fork.set(1)
-    iterations.set(1)
-    jmhVersion.set("1.36")
-    jvmArgs.set( listOf("--add-exports","java.base/jdk.internal.vm=ALL-UNNAMED","--enable-preview") )
-    timeUnit.set("ms")
-    warmupIterations.set(1)
-}
-
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
