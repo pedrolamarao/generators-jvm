@@ -28,13 +28,12 @@ public class OfxReader
     {
         try
         {
-            final var headerParsed = OfxHeader.parse(stream);
-            final var header = headerParsed.value();
-            int byte_ = headerParsed.remaining();
-            RunnableGenerator.yield(header);
+            final var header = OfxParser.parseHeader(stream);
+            RunnableGenerator.yield(header.value());
 
-            if (! header.properties().containsKey("OFXHEADER")) throw new RuntimeException("unexpected header: OFXHEADER not found");
-            final int version = Integer.parseInt( header.properties().get("OFXHEADER") );
+            final var properties = header.value().properties();
+            if (! properties.containsKey("OFXHEADER")) throw new RuntimeException("unexpected header: OFXHEADER not found");
+            final int version = Integer.parseInt( properties.get("OFXHEADER") );
             if (version != 100) throw new RuntimeException("unsupported version: " + version);
 
             // #TODO: parse OFX
