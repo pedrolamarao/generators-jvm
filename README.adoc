@@ -11,14 +11,15 @@ Applications are demonstrated in `readers`.
 
 Have `JAVA_HOME` point to a JDK version up to 19.
 
-Compilation will use a JDK version 20 automatically provisioned by Gradle.
-Alternatively, see: https://docs.gradle.org/8.1-rc-2/userguide/toolchains.html
+Unpack JDK 21 EA into `${rootDir}/jdk-21`.
+Alternatively, edit `${rootDir}/gradle.properties`.
+For more information, see: https://docs.gradle.org/8.1-rc-2/userguide/toolchains.html
 
 To build and run automated tests: `./gradlew build`
 
 To build benchmarks: `./gradlew jmhJar`
 
-To run benchmarks: `./gradlew jmh`
+To run benchmarks: `./gradlew --console=plain jmh`
 
 You may manually run a benchmark by doing something like:
 
@@ -29,11 +30,11 @@ java --add-exports java.base/jdk.internal.vm=ALL-UNNAMED --enable-preview -jar .
 
 == using
 
-The generators module require JDK version 20 with preview features enabled.
+The generators module require JDK version 21 with preview features enabled.
 
 JARs are currently not published anywhere.
 
-To configure a Gradle project:
+To configure a Gradle consumer project:
 
 .build.gradle.kts
 [source,gradle]

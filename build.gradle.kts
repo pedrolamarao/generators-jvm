@@ -11,7 +11,7 @@ subprojects {
     plugins.withType<JavaPlugin>().configureEach {
         extensions.getByType<JavaPluginExtension>().apply {
             toolchain {
-                languageVersion.set( JavaLanguageVersion.of(20) )
+                languageVersion.set( JavaLanguageVersion.of(21) )
             }
         }
         tasks.withType<Test>().configureEach {
