@@ -7,13 +7,10 @@ import java.io.Reader;
 
 public final class LineAbstractReader extends AbstractGenerator<String> implements LineReader
 {
-    private final char[] buffer;
-
     private final Reader reader;
 
-    public LineAbstractReader (Reader reader, int capacity)
+    public LineAbstractReader (Reader reader)
     {
-        this.buffer = new char[capacity];
         this.reader = reader;
     }
 
@@ -26,7 +23,7 @@ public final class LineAbstractReader extends AbstractGenerator<String> implemen
     @Override
     protected void run ()
     {
-        try { LineParser.parse(reader,buffer,it -> this.yield(it.toString())); }
+        try { LineParser.parse(reader, this::yield); }
             catch (IOException e) { throw new RuntimeException(e); }
         this.yield(null);
     }

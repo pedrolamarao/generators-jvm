@@ -7,15 +7,12 @@ import java.io.Reader;
 
 public final class LineRunnableReader implements LineReader
 {
-    private final char[] buffer;
-
     private final RunnableGenerator<String> generator;
 
     private final Reader reader;
 
-    public LineRunnableReader (Reader reader, int capacity)
+    public LineRunnableReader (Reader reader)
     {
-        this.buffer = new char[capacity];
         this.generator = new RunnableGenerator<>(this::run);
         this.reader = reader;
     }
@@ -28,7 +25,7 @@ public final class LineRunnableReader implements LineReader
 
     void run ()
     {
-        try { LineParser.parse(reader,buffer, it -> RunnableGenerator.yield(it.toString())); }
+        try { LineParser.parse(reader, RunnableGenerator::yield); }
             catch (IOException e) { throw new RuntimeException(e); }
         RunnableGenerator.yield(null);
     }

@@ -7,6 +7,6 @@ public class LineRunnableReaderTest extends LineGeneratorTest
     @Override
     LineReader create (Reader reader, int buffer)
     {
-        return new LineRunnableReader(reader,buffer);
+        return new LineRunnableReader(reader);
     }
 }

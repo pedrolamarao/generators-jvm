@@ -1,10 +1,12 @@
 package br.dev.pedrolamarao.generators.line;
 
-import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
 import java.util.stream.IntStream;
 
@@ -13,116 +15,64 @@ public class NextBenchmark
 {
     static final int lines = 10240;
 
-    @State(Scope.Benchmark)
-    public static class BufferedReaderState
-    {
-        int counter;
-
-        BufferedReader reader;
-
-        @Setup(Level.Invocation)
-        public void setup ()
-        {
-            counter = 0;
-            reader = new BufferedReader(new StringReader(data()),8192);
-        }
-    }
+    String data;
 
     @Benchmark
-    public long bufferedReader (BufferedReaderState it) throws Exception
+    public long bufferedReader () throws IOException
     {
+        final var reader = new BufferedReader( new StringReader(data) );
+        int counter = 0;
         while (true) {
-            final var line = it.reader.readLine();
+            final var line = reader.readLine();
             if (line == null) break;
-            ++it.counter;
+            ++counter;
         }
-        if (it.counter != lines) throw new RuntimeException("unexpected counter: " + it.counter);
-        return it.counter;
-    }
-
-    @State(Scope.Benchmark)
-    public static class ParserState
-    {
-        final char[] buffer = new char[8192];
-
-        int counter;
-
-        Reader reader;
-
-        @Setup(Level.Invocation)
-        public void setup ()
-        {
-            counter = 0;
-            reader = new StringReader( data() );
-        }
+        if (counter != lines) throw new RuntimeException("unexpected counter: " + counter);
+        return counter;
     }
 
     @Benchmark
-    public long parser (ParserState it) throws IOException
+    public long parser () throws IOException
     {
-        LineParser.parse(it.reader,it.buffer, line -> ++it.counter);
-        if (it.counter != lines) throw new RuntimeException("unexpected counter: " + it.counter);
-        return it.counter;
-    }
-
-    @State(Scope.Benchmark)
-    public static class AbstractGeneratorState
-    {
-        int counter;
-
-        LineAbstractReader reader;
-
-        @Setup(Level.Invocation)
-        public void setup ()
-        {
-            counter = 0;
-            reader = new LineAbstractReader(new StringReader(data()),8192);
-        }
+        final int[] counter = { 0 };
+        LineParser.parse( new StringReader(data), line -> ++counter[0] );
+        if (counter[0] != lines) throw new RuntimeException("unexpected counter: " + counter[0]);
+        return counter[0];
     }
 
     @Benchmark
-    public long abstractGenerator (AbstractGeneratorState it)
+    public long abstractGenerator ()
     {
+        final var reader = new LineAbstractReader( new StringReader(data) );
+        int counter = 0;
         while (true) {
-            final var line = it.reader.read();
+            final var line = reader.read();
             if (line == null) break;
-            ++it.counter;
+            ++counter;
         }
-        if (it.counter != lines) throw new RuntimeException("unexpected counter: " + it.counter);
-        return it.counter;
-    }
-
-    @State(Scope.Benchmark)
-    public static class RunnableGeneratorState
-    {
-        int counter;
-
-        LineRunnableReader reader;
-
-        @Setup(Level.Invocation)
-        public void setup ()
-        {
-            counter = 0;
-            reader = new LineRunnableReader(new StringReader(data()),8192);
-        }
+        if (counter != lines) throw new RuntimeException("unexpected counter: " + counter);
+        return counter;
     }
 
     @Benchmark
-    public long runnableGenerator (RunnableGeneratorState it)
+    public long runnableGenerator ()
     {
+        final var reader = new LineRunnableReader( new StringReader(data) );
+        int counter = 0;
         while (true) {
-            final var line = it.reader.read();
+            final var line = reader.read();
             if (line == null) break;
-            ++it.counter;
+            ++counter;
         }
-        if (it.counter != lines) throw new RuntimeException("unexpected counter: " + it.counter);
-        return it.counter;
+        if (counter != lines) throw new RuntimeException("unexpected counter: " + counter);
+        return counter;
     }
 
-    public static String data ()
+    @Setup
+    public void generate ()
     {
         final var builder = new StringBuilder();
         IntStream.range(0,lines).forEach(_1 -> builder.append("2022-02-02,foo ,bar, 1.0, Description of this record\n"));
-        return builder.toString();
+        data = builder.toString();
     }
 }

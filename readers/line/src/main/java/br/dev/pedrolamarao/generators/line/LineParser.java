@@ -1,61 +1,68 @@
 package br.dev.pedrolamarao.generators.line;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
-import java.nio.CharBuffer;
 import java.util.function.Consumer;
 
 public class LineParser
 {
-    public static void parse (Reader reader, char[] buffer, Consumer<CharSequence> consumer) throws IOException
+    public static void parse (Reader reader, Consumer<String> consumer) throws IOException
     {
-        final var remainder = new StringBuilder();
+        final var buffer = new StringBuilder();
 
-        while (true)
-        {
-            final int limit = reader.read(buffer,0,buffer.length);
-            if (limit == -1) break;
-
-            final int first;
-            if (remainder.isEmpty()) {
-                first = 0;
+        int byte_ = -1;
+        while ((byte_ = reader.read()) != -1) {
+            if (byte_ == '\n') {
+                consumer.accept( buffer.toString() );
+                buffer.setLength(0);
             }
-            else {
-                final int position = find(buffer,0,limit,'\n');
-                if (position == -1) {
-                    remainder.append(buffer,0,limit);
-                    continue;
+            else if (byte_ == '\r') {
+                if ((byte_ = reader.read()) == -1) break;
+                if (byte_ == '\n') {
+                    consumer.accept( buffer.toString() );
+                    buffer.setLength(0);
                 }
                 else {
-                    remainder.append(buffer,0,position);
-                    consumer.accept(remainder.toString());
-                    remainder.setLength(0);
-                    first = position + 1;
+                    buffer.append('\r');
+                    buffer.append((char)byte_);
                 }
             }
-
-            int current = first;
-            while (current < limit) {
-                final int position = find(buffer,current,limit,'\n');
-                if (position == -1) break;
-                consumer.accept( CharBuffer.wrap(buffer,current,position-current) );
-                current = position + 1;
-            }
-
-            if (current < limit) {
-                remainder.append(buffer, current, limit - current);
+            else {
+                buffer.append((char)byte_);
             }
         }
 
-        if (! remainder.isEmpty())
-            consumer.accept(remainder.toString());
+        if (! buffer.isEmpty()) consumer.accept( buffer.toString() );
     }
 
-    static int find (char[] buffer, int position, int limit, char target)
+    public static void parse (InputStream stream, Consumer<byte[]> consumer) throws IOException
     {
-        for (int i = position, j = limit; i != j; ++i)
-            if (buffer[i] == target)
-                return i;
-        return -1;
+        final var buffer = new ByteArrayOutputStream();
+
+        int byte_ = -1;
+        while ((byte_ = stream.read()) != -1) {
+            if (byte_ == '\n') {
+                consumer.accept( buffer.toByteArray() );
+                buffer.reset();
+            }
+            else if (byte_ == '\r') {
+                if ((byte_ = stream.read()) == -1) break;
+                if (byte_ == '\n') {
+                    consumer.accept( buffer.toByteArray() );
+                    buffer.reset();
+                }
+                else {
+                    buffer.write('\r');
+                    buffer.write(byte_);
+                }
+            }
+            else {
+                buffer.write(byte_);
+            }
+        }
+
+        if (buffer.size() != 0) consumer.accept( buffer.toByteArray() );
     }
 }
