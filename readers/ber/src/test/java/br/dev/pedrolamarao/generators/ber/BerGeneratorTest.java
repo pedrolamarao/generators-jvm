@@ -31,7 +31,7 @@ public abstract class BerGeneratorTest
         // close: subjectPublicKeyInfo.algorithm : algorithmIdentifier
         assertThat( subjectPublicKeyInfoReader.read(), isA(BerClose.class) );
         // subjectPublicKeyInfo.subjectPublicKey : BIT STRING
-        assertThat( subjectPublicKeyInfoReader.read(), isA(BerBytes.class) );
+        assertThat( subjectPublicKeyInfoReader.read(), isA(BerBits.class) );
         // close: subjectPublicKeyInfo
         assertThat( subjectPublicKeyInfoReader.read(), isA(BerClose.class) );
         // finish
