@@ -21,5 +21,5 @@ subprojects {
 }
 
 tasks.wrapper.configure {
-    gradleVersion = "8.1-rc-2"
+    gradleVersion = "8.1-rc-4"
 }
