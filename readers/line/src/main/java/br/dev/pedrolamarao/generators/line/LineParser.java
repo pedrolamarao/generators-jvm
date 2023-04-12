@@ -8,6 +8,37 @@ import java.util.function.Consumer;
 
 public class LineParser
 {
+    public static void parse (char[] chars, Consumer<String> consumer)
+    {
+        final var line = new StringBuilder();
+
+        int byte_ = -1;
+        for (int i = 0, j = chars.length; i != j; ++i) {
+            byte_ = chars[i];
+            if (byte_ == '\n') {
+                consumer.accept( line.toString() );
+                line.setLength(0);
+            }
+            else if (byte_ == '\r') {
+                if (++i == j) break;
+                byte_ = chars[i];
+                if (byte_ == '\n') {
+                    consumer.accept( line.toString() );
+                    line.setLength(0);
+                }
+                else {
+                    line.append('\r');
+                    line.append((char)byte_);
+                }
+            }
+            else {
+                line.append((char)byte_);
+            }
+        }
+
+        if (! line.isEmpty()) consumer.accept( line.toString() );
+    }
+
     public static void parse (Reader reader, Consumer<String> consumer) throws IOException
     {
         final var line = new StringBuilder();
@@ -35,6 +66,33 @@ public class LineParser
         }
 
         if (! line.isEmpty()) consumer.accept( line.toString() );
+    }
+
+    public static void parseWithMarkReset (char[] chars, Consumer<String> consumer)
+    {
+        int mark = 0;
+        for (int i = 0, j = chars.length; i != j; ++i) {
+            final char c = chars[i];
+            if (c == '\n') {
+                final int length = i - mark;
+                consumer.accept( new String(chars,mark,length) );
+                mark = i + 1;
+            }
+            else if (c == '\r') {
+                if (++i == j) break;
+                final char cc = chars[i];
+                if (cc == '\n') {
+                    final int length = i - mark - 1;
+                    consumer.accept( new String(chars,mark,length) );
+                    mark = i + 1;
+                }
+            }
+        }
+
+        if (mark < chars.length) {
+            final int length = chars.length - mark;
+            consumer.accept( new String(chars,mark,length) );
+        }
     }
 
     public static void parseWithMarkReset (Reader reader, Consumer<String> consumer) throws IOException

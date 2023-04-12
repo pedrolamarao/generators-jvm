@@ -20,7 +20,7 @@ public class NextBenchmark
     String data;
 
     @Benchmark
-    public long bufferedReader () throws IOException
+    public long base () throws IOException
     {
         final var reader = new BufferedReader( new StringReader(data) );
         int counter = 0;
@@ -34,7 +34,25 @@ public class NextBenchmark
     }
 
     @Benchmark
-    public long parser () throws IOException
+    public long parseChars ()
+    {
+        final int[] counter = { 0 };
+        LineParser.parse( data.toCharArray(), line -> ++counter[0] );
+        if (counter[0] != count) throw new RuntimeException("unexpected counter: " + counter[0]);
+        return counter[0];
+    }
+
+    @Benchmark
+    public long parseCharsWithMarkReset ()
+    {
+        final int[] counter = { 0 };
+        LineParser.parseWithMarkReset( data.toCharArray(), line -> ++counter[0] );
+        if (counter[0] != count) throw new RuntimeException("unexpected counter: " + counter[0]);
+        return counter[0];
+    }
+
+    @Benchmark
+    public long parseReader () throws IOException
     {
         final int[] counter = { 0 };
         LineParser.parse( new StringReader(data), line -> ++counter[0] );
@@ -43,7 +61,7 @@ public class NextBenchmark
     }
 
     @Benchmark
-    public long parserWithMarkReset () throws IOException
+    public long parseReaderWithMarkReset () throws IOException
     {
         final int[] counter = { 0 };
         LineParser.parseWithMarkReset( new StringReader(data), line -> ++counter[0] );
@@ -52,7 +70,7 @@ public class NextBenchmark
     }
 
     @Benchmark
-    public long abstractGenerator ()
+    public long abstractRead ()
     {
         final var reader = new LineAbstractReader( new StringReader(data) );
         int counter = 0;
@@ -66,7 +84,7 @@ public class NextBenchmark
     }
 
     @Benchmark
-    public long runnableGenerator ()
+    public long runnableRead ()
     {
         final var reader = new LineRunnableReader( new StringReader(data) );
         int counter = 0;
