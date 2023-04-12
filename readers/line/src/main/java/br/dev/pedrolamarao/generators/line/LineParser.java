@@ -10,11 +10,6 @@ public class LineParser
 {
     public static void parse (Reader reader, Consumer<String> consumer) throws IOException
     {
-        if (reader.markSupported()) {
-            parseWithMark(reader,consumer);
-            return;
-        }
-
         final var line = new StringBuilder();
 
         int byte_ = -1;
@@ -42,8 +37,10 @@ public class LineParser
         if (! line.isEmpty()) consumer.accept( line.toString() );
     }
 
-    static void parseWithMark (Reader reader, Consumer<String> consumer) throws IOException
+    public static void parseWithMarkReset (Reader reader, Consumer<String> consumer) throws IOException
     {
+        if (! reader.markSupported()) throw new IllegalArgumentException();
+
         char[] line = new char[16];
 
         reader.mark(Integer.MAX_VALUE);

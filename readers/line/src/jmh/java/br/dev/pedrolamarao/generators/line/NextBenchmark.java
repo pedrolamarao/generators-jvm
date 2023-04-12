@@ -1,18 +1,21 @@
 package br.dev.pedrolamarao.generators.line;
 
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.*;
 
-import java.io.*;
-import java.nio.CharBuffer;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 @State(Scope.Benchmark)
 public class NextBenchmark
 {
-    static final int lines = 10240;
+    @Param({"1024"})
+    int length;
+
+    @Param({"1024"})
+    int count;
 
     String data;
 
@@ -26,7 +29,7 @@ public class NextBenchmark
             if (line == null) break;
             ++counter;
         }
-        if (counter != lines) throw new RuntimeException("unexpected counter: " + counter);
+        if (counter != count) throw new RuntimeException("unexpected counter: " + counter);
         return counter;
     }
 
@@ -34,36 +37,22 @@ public class NextBenchmark
     public long parser () throws IOException
     {
         final int[] counter = { 0 };
-        LineParser.parse( new NoMarkResetReader( new StringReader(data) ), line -> ++counter[0] );
-        if (counter[0] != lines) throw new RuntimeException("unexpected counter: " + counter[0]);
+        LineParser.parse( new StringReader(data), line -> ++counter[0] );
+        if (counter[0] != count) throw new RuntimeException("unexpected counter: " + counter[0]);
         return counter[0];
     }
 
     @Benchmark
-    public long parserMarkReset () throws IOException
+    public long parserWithMarkReset () throws IOException
     {
         final int[] counter = { 0 };
-        LineParser.parse( new StringReader(data), line -> ++counter[0] );
-        if (counter[0] != lines) throw new RuntimeException("unexpected counter: " + counter[0]);
+        LineParser.parseWithMarkReset( new StringReader(data), line -> ++counter[0] );
+        if (counter[0] != count) throw new RuntimeException("unexpected counter: " + counter[0]);
         return counter[0];
     }
 
     @Benchmark
     public long abstractGenerator ()
-    {
-        final var reader = new LineAbstractReader( new NoMarkResetReader( new StringReader(data) ) );
-        int counter = 0;
-        while (true) {
-            final var line = reader.read();
-            if (line == null) break;
-            ++counter;
-        }
-        if (counter != lines) throw new RuntimeException("unexpected counter: " + counter);
-        return counter;
-    }
-
-    @Benchmark
-    public long abstractGeneratorMarkReset ()
     {
         final var reader = new LineAbstractReader( new StringReader(data) );
         int counter = 0;
@@ -72,7 +61,7 @@ public class NextBenchmark
             if (line == null) break;
             ++counter;
         }
-        if (counter != lines) throw new RuntimeException("unexpected counter: " + counter);
+        if (counter != count) throw new RuntimeException("unexpected counter: " + counter);
         return counter;
     }
 
@@ -86,107 +75,21 @@ public class NextBenchmark
             if (line == null) break;
             ++counter;
         }
-        if (counter != lines) throw new RuntimeException("unexpected counter: " + counter);
+        if (counter != count) throw new RuntimeException("unexpected counter: " + counter);
         return counter;
-    }
-
-    @Benchmark
-    public long runnableGeneratorMarkReset ()
-    {
-        final var reader = new LineRunnableReader( new NoMarkResetReader( new StringReader(data) ) );
-        int counter = 0;
-        while (true) {
-            final var line = reader.read();
-            if (line == null) break;
-            ++counter;
-        }
-        if (counter != lines) throw new RuntimeException("unexpected counter: " + counter);
-        return counter;
-    }
-
-    //
-
-    static class NoMarkResetReader extends Reader
-    {
-        private final Reader reader;
-
-        NoMarkResetReader (Reader reader)
-        {
-            this.reader = reader;
-        }
-
-        @Override
-        public void close () throws IOException
-        {
-            reader.close();
-        }
-
-        @Override
-        public void mark (int readAheadLimit) throws IOException
-        {
-            throw new IOException();
-        }
-
-        @Override
-        public boolean markSupported ()
-        {
-            return false;
-        }
-
-        @Override
-        public int read () throws IOException
-        {
-            return reader.read();
-        }
-
-        @Override
-        public int read (char[] cbuf) throws IOException
-        {
-            return reader.read(cbuf);
-        }
-
-        @Override
-        public int read (char[] cbuf, int off, int len) throws IOException
-        {
-            return reader.read(cbuf,off,len);
-        }
-
-        @Override
-        public int read (CharBuffer target) throws IOException
-        {
-            return reader.read(target);
-        }
-
-        @Override
-        public boolean ready () throws IOException
-        {
-            return reader.ready();
-        }
-
-        @Override
-        public void reset () throws IOException
-        {
-            throw new IOException();
-        }
-
-        @Override
-        public long skip (long n) throws IOException
-        {
-            return reader.skip(n);
-        }
-
-        @Override
-        public long transferTo (Writer out) throws IOException
-        {
-            return reader.transferTo(out);
-        }
     }
 
     @Setup
     public void generate ()
     {
         final var builder = new StringBuilder();
-        IntStream.range(0,lines).forEach(_1 -> builder.append("2022-02-02,foo ,bar, 1.0, Description of this record\n"));
+        IntStream
+            .range(0,count).forEach(_1 -> {
+                final char[] chars = new char[length];
+                Arrays.fill(chars,'x');
+                chars[chars.length-1] = '\n';
+                builder.append(chars);
+            });
         data = builder.toString();
     }
 }
