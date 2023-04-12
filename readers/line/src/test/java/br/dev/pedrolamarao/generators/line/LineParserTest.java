@@ -8,11 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 //@Timeout(value=1,threadMode=SEPARATE_THREAD)
-public abstract class LineParserTest
+public abstract class LineParserTest extends LineTest
 {
     abstract Iterator<String> parse (String text);
-
-    final String text_1 = "foo,bar,1.0, ,\nmeh,duh,2.22,\nhmmm,hmmmmmmm,3.33\n";
 
     @Test
     public void test_1_1 ()
@@ -57,8 +55,6 @@ public abstract class LineParserTest
         assertEquals( "hmmm,hmmmmmmm,3.33", reader.next() );
         assertNull( reader.next() );
     }
-
-    final String text_2 = "foo,bar,1.0, ,\nmeh,duh,2.22,\nhmmm,hmmmmmmm,3.33";
 
     @Test
     public void test_2_1 ()

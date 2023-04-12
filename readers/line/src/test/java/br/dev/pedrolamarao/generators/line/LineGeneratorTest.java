@@ -9,11 +9,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 //@Timeout(value=1,threadMode=SEPARATE_THREAD)
-public abstract class LineGeneratorTest
+public abstract class LineGeneratorTest extends LineTest
 {
     abstract LineReader create (Reader reader, int buffer);
-
-    final String text_1 = "foo,bar,1.0, ,\nmeh,duh,2.22,\nhmmm,hmmmmmmm,3.33\n";
 
     @Test
     public void test_1_1 ()
@@ -58,8 +56,6 @@ public abstract class LineGeneratorTest
         assertEquals( "hmmm,hmmmmmmm,3.33", reader.read() );
         assertNull( reader.read() );
     }
-
-    final String text_2 = "foo,bar,1.0, ,\nmeh,duh,2.22,\nhmmm,hmmmmmmm,3.33";
 
     @Test
     public void test_2_1 ()
