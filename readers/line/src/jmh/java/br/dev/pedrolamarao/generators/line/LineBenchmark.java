@@ -34,39 +34,31 @@ public class LineBenchmark
     }
 
     @Benchmark
-    public long parseChars ()
+    public long iterateCharArray ()
     {
-        final int[] counter = { 0 };
-        LineParser.parse( data.toCharArray(), line -> ++counter[0] );
-        if (counter[0] != count) throw new RuntimeException("unexpected counter: " + counter[0]);
-        return counter[0];
+        int counter = 0;
+        final var supplier = LineSuppliers.from(data.toCharArray());
+        while (true) {
+            final var line = supplier.get();
+            if (line == null) break;
+            ++counter;
+        }
+        if (counter != count) throw new RuntimeException("unexpected counter: " + counter);
+        return counter;
     }
 
     @Benchmark
-    public long parseCharsWithMarkReset ()
+    public long iterateReader ()
     {
-        final int[] counter = { 0 };
-        LineParser.parseWithMarkReset( data.toCharArray(), line -> ++counter[0] );
-        if (counter[0] != count) throw new RuntimeException("unexpected counter: " + counter[0]);
-        return counter[0];
-    }
-
-    @Benchmark
-    public long parseReader () throws IOException
-    {
-        final int[] counter = { 0 };
-        LineParser.parse( new StringReader(data), line -> ++counter[0] );
-        if (counter[0] != count) throw new RuntimeException("unexpected counter: " + counter[0]);
-        return counter[0];
-    }
-
-    @Benchmark
-    public long parseReaderWithMarkReset () throws IOException
-    {
-        final int[] counter = { 0 };
-        LineParser.parseWithMarkReset( new StringReader(data), line -> ++counter[0] );
-        if (counter[0] != count) throw new RuntimeException("unexpected counter: " + counter[0]);
-        return counter[0];
+        int counter = 0;
+        final var supplier = LineSuppliers.from( new StringReader(data) );
+        while (true) {
+            final var line = supplier.get();
+            if (line == null) break;
+            ++counter;
+        }
+        if (counter != count) throw new RuntimeException("unexpected counter: " + counter);
+        return counter;
     }
 
     @Benchmark

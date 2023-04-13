@@ -2,19 +2,19 @@ package br.dev.pedrolamarao.generators.line;
 
 import br.dev.pedrolamarao.generators.RunnableGenerator;
 
-import java.io.IOException;
 import java.io.Reader;
+import java.util.function.Supplier;
 
 public final class LineRunnableReader implements LineReader
 {
     private final RunnableGenerator<String> generator;
 
-    private final Reader reader;
+    private final Supplier<String> supplier;
 
     public LineRunnableReader (Reader reader)
     {
         this.generator = new RunnableGenerator<>(this::run);
-        this.reader = reader;
+        this.supplier = LineSuppliers.from(reader);
     }
 
     @Override
@@ -25,8 +25,11 @@ public final class LineRunnableReader implements LineReader
 
     void run ()
     {
-        try { LineParser.parse(reader, RunnableGenerator::yield); }
-            catch (IOException e) { throw new RuntimeException(e); }
+        while (true) {
+            final var line = supplier.get();
+            if (line == null) break;
+            RunnableGenerator.yield(line);
+        }
         RunnableGenerator.yield(null);
     }
 }

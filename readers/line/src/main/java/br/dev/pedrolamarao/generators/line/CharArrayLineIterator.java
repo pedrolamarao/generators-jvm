@@ -1,8 +1,8 @@
 package br.dev.pedrolamarao.generators.line;
 
-import java.util.Iterator;
+import java.util.function.Supplier;
 
-final class CharArrayLineIterator implements Iterator<String>
+final class CharArrayLineIterator implements Supplier<String>
 {
     private final char[] chars;
 
@@ -18,15 +18,10 @@ final class CharArrayLineIterator implements Iterator<String>
     }
 
     @Override
-    public boolean hasNext ()
-    {
-        return position < limit;
-    }
-
-    @Override
-    public String next ()
+    public String get ()
     {
         if (position == limit) return null;
+        // next
         for (int i = position, j = limit; i != j; ++i) {
             final char c = chars[i];
             if (c == '\r' || c == '\n') {
@@ -35,7 +30,7 @@ final class CharArrayLineIterator implements Iterator<String>
                 return line;
             }
         }
-        // finish
+        // last
         {
             final var line = new String(chars, position, limit - position);
             position = limit;

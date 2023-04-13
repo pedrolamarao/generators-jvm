@@ -2,16 +2,16 @@ package br.dev.pedrolamarao.generators.line;
 
 import br.dev.pedrolamarao.generators.AbstractGenerator;
 
-import java.io.IOException;
 import java.io.Reader;
+import java.util.function.Supplier;
 
 public final class LineAbstractReader extends AbstractGenerator<String> implements LineReader
 {
-    private final Reader reader;
+    private final Supplier<String> supplier;
 
     public LineAbstractReader (Reader reader)
     {
-        this.reader = reader;
+        this.supplier = LineSuppliers.from(reader);
     }
 
     @Override
@@ -23,8 +23,11 @@ public final class LineAbstractReader extends AbstractGenerator<String> implemen
     @Override
     protected void run ()
     {
-        try { LineParser.parse(reader, this::yield); }
-            catch (IOException e) { throw new RuntimeException(e); }
+        while (true) {
+            final var line = supplier.get();
+            if (line == null) break;
+            this.yield(line);
+        }
         this.yield(null);
     }
 }
