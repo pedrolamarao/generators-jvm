@@ -20,7 +20,7 @@ public final class LineRunnableReader implements Supplier<String>
     @Override
     public String get ()
     {
-        return generator.next();
+        return generator.get();
     }
 
     void run ()

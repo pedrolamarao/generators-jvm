@@ -30,6 +30,6 @@ public final class BerRunnableReader implements BerReader
     @Override
     public BerObject read ()
     {
-        return generator.next();
+        return generator.get();
     }
 }

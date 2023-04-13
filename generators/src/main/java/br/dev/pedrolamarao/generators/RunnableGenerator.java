@@ -3,7 +3,9 @@ package br.dev.pedrolamarao.generators;
 import jdk.internal.vm.Continuation;
 import jdk.internal.vm.ContinuationScope;
 
-public class RunnableGenerator<T> implements Generator<T>
+import java.util.function.Supplier;
+
+public class RunnableGenerator<T> implements Supplier<T>
 {
     private static final ContinuationScope scope = new ContinuationScope("RunnableGenerator");
 
@@ -24,7 +26,7 @@ public class RunnableGenerator<T> implements Generator<T>
         this.continuation = new ContinuationImpl<T>(runnable);
     }
 
-    public final T next ()
+    public final T get ()
     {
         continuation.run();
         return continuation.next;

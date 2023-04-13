@@ -3,7 +3,9 @@ package br.dev.pedrolamarao.generators;
 import jdk.internal.vm.Continuation;
 import jdk.internal.vm.ContinuationScope;
 
-public abstract class AbstractGenerator<T> implements Generator<T>
+import java.util.function.Supplier;
+
+public abstract class AbstractGenerator<T> implements Supplier<T>
 {
     private static final ContinuationScope scope = new ContinuationScope("AbstractGenerator");
 
@@ -16,7 +18,7 @@ public abstract class AbstractGenerator<T> implements Generator<T>
         this.continuation = new Continuation(scope,this::run);
     }
 
-    public final T next ()
+    public final T get ()
     {
         continuation.run();
         return next;

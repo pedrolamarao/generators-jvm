@@ -21,7 +21,7 @@ public class OfxReader
 
     public OfxObject read ()
     {
-        return generator.next();
+        return generator.get();
     }
 
     private static void run (InputStream stream)

@@ -17,7 +17,7 @@ public final class BerAbstractReader extends AbstractGenerator<BerObject> implem
     @Override
     public BerObject read ()
     {
-        return this.next();
+        return this.get();
     }
 
     @Override
