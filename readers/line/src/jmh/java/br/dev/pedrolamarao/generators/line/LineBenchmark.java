@@ -67,7 +67,7 @@ public class LineBenchmark
         final var reader = new LineAbstractReader( new StringReader(data) );
         int counter = 0;
         while (true) {
-            final var line = reader.read();
+            final var line = reader.get();
             if (line == null) break;
             ++counter;
         }
@@ -81,7 +81,7 @@ public class LineBenchmark
         final var reader = new LineRunnableReader( new StringReader(data) );
         int counter = 0;
         while (true) {
-            final var line = reader.read();
+            final var line = reader.get();
             if (line == null) break;
             ++counter;
         }

@@ -5,7 +5,7 @@ import br.dev.pedrolamarao.generators.AbstractGenerator;
 import java.io.Reader;
 import java.util.function.Supplier;
 
-public final class LineAbstractReader extends AbstractGenerator<String> implements LineReader
+public final class LineAbstractReader extends AbstractGenerator<String> implements Supplier<String>
 {
     private final Supplier<String> supplier;
 
@@ -15,7 +15,7 @@ public final class LineAbstractReader extends AbstractGenerator<String> implemen
     }
 
     @Override
-    public String read ()
+    public String get ()
     {
         return this.next();
     }

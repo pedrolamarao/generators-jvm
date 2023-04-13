@@ -1,12 +1,13 @@
 package br.dev.pedrolamarao.generators.line;
 
-import java.io.Reader;
+import java.io.StringReader;
+import java.util.function.Supplier;
 
-public class LineAbstractReaderTest extends LineGeneratorTest
+public class LineAbstractReaderTest extends LineTest
 {
     @Override
-    LineReader create (Reader reader, int buffer)
+    Supplier<String> parse (String text)
     {
-        return new LineAbstractReader(reader);
+        return new LineAbstractReader( new StringReader(text) );
     }
 }

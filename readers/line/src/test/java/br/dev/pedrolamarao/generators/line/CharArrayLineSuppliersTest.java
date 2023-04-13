@@ -2,7 +2,7 @@ package br.dev.pedrolamarao.generators.line;
 
 import java.util.function.Supplier;
 
-public class CharArrayLineSuppliersTest extends LineParserTest
+public class CharArrayLineSuppliersTest extends LineTest
 {
     @Override
     Supplier<String> parse (String text)

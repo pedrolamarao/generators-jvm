@@ -5,7 +5,7 @@ import br.dev.pedrolamarao.generators.RunnableGenerator;
 import java.io.Reader;
 import java.util.function.Supplier;
 
-public final class LineRunnableReader implements LineReader
+public final class LineRunnableReader implements Supplier<String>
 {
     private final RunnableGenerator<String> generator;
 
@@ -18,7 +18,7 @@ public final class LineRunnableReader implements LineReader
     }
 
     @Override
-    public String read ()
+    public String get ()
     {
         return generator.next();
     }
