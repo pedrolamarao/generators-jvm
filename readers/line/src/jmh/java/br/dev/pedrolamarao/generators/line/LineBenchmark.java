@@ -34,10 +34,10 @@ public class LineBenchmark
     }
 
     @Benchmark
-    public long iterateCharArray ()
+    public long supplierFromCharArray ()
     {
         int counter = 0;
-        final var supplier = LineSuppliers.from(data.toCharArray());
+        final var supplier = LineSuppliers.from( data.toCharArray() );
         while (true) {
             final var line = supplier.get();
             if (line == null) break;
@@ -48,7 +48,7 @@ public class LineBenchmark
     }
 
     @Benchmark
-    public long iterateReader ()
+    public long supplierFromReader ()
     {
         int counter = 0;
         final var supplier = LineSuppliers.from( new StringReader(data) );
@@ -62,9 +62,9 @@ public class LineBenchmark
     }
 
     @Benchmark
-    public long abstractRead ()
+    public long abstractGeneratorFromCharArray ()
     {
-        final var reader = new LineAbstractReader( new StringReader(data) );
+        final var reader = LineGenerators.abstractFrom( data.toCharArray() );
         int counter = 0;
         while (true) {
             final var line = reader.get();
@@ -76,9 +76,37 @@ public class LineBenchmark
     }
 
     @Benchmark
-    public long runnableRead ()
+    public long abstractGeneratorFromReader ()
     {
-        final var reader = new LineRunnableReader( new StringReader(data) );
+        final var reader = LineGenerators.abstractFrom( new StringReader(data) );
+        int counter = 0;
+        while (true) {
+            final var line = reader.get();
+            if (line == null) break;
+            ++counter;
+        }
+        if (counter != count) throw new RuntimeException("unexpected counter: " + counter);
+        return counter;
+    }
+
+    @Benchmark
+    public long runnableGeneratorFromCharArray ()
+    {
+        final var reader = LineGenerators.runnableFrom( data.toCharArray() );
+        int counter = 0;
+        while (true) {
+            final var line = reader.get();
+            if (line == null) break;
+            ++counter;
+        }
+        if (counter != count) throw new RuntimeException("unexpected counter: " + counter);
+        return counter;
+    }
+
+    @Benchmark
+    public long runnableGeneratorFromReader ()
+    {
+        final var reader = LineGenerators.runnableFrom( new StringReader(data) );
         int counter = 0;
         while (true) {
             final var line = reader.get();

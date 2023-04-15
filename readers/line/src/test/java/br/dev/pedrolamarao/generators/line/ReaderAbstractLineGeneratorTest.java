@@ -3,11 +3,11 @@ package br.dev.pedrolamarao.generators.line;
 import java.io.StringReader;
 import java.util.function.Supplier;
 
-public class LineAbstractReaderTest extends LineTest
+public class ReaderAbstractLineGeneratorTest extends LineTest
 {
     @Override
     Supplier<String> parse (String text)
     {
-        return new LineAbstractReader( new StringReader(text) );
+        return LineGenerators.abstractFrom( new StringReader(text) );
     }
 }
