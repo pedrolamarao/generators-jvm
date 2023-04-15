@@ -44,7 +44,7 @@ public class CsvSuppliers
         {
             if (position == limit) return null;
             // next
-            for (int i = position, j = limit; i != j; ++i) {
+            for (int i = position; i != limit; ++i) {
                 final char c = chars[i];
                 if (c == '\r' || c == '\n') {
                     final var line = new String(chars, position, i - position);
