@@ -18,6 +18,7 @@ public abstract class AbstractGenerator<T> implements Supplier<T>
         this.continuation = new Continuation(scope,this::run);
     }
 
+    @Override
     public final T get ()
     {
         continuation.run();

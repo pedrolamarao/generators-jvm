@@ -13,7 +13,7 @@ public class RunnableGenerator<T> implements Supplier<T>
     {
         private T next;
 
-        public ContinuationImpl (Runnable target)
+        ContinuationImpl (Runnable target)
         {
             super(scope, target);
         }
@@ -26,6 +26,7 @@ public class RunnableGenerator<T> implements Supplier<T>
         this.continuation = new ContinuationImpl<T>(runnable);
     }
 
+    @Override
     public final T get ()
     {
         continuation.run();
@@ -34,7 +35,7 @@ public class RunnableGenerator<T> implements Supplier<T>
 
     public static <T> void yield (T value)
     {
-        ((ContinuationImpl) Continuation.getCurrentContinuation(scope)).next = value;
+        ((ContinuationImpl<T>) Continuation.getCurrentContinuation(scope)).next = value;
         Continuation.yield(scope);
     }
 }
