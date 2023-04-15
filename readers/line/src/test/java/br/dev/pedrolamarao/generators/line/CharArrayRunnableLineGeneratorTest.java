@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 public class CharArrayRunnableLineGeneratorTest extends LineTest
 {
     @Override
-    Supplier<String> parse (String text)
+    Supplier<String> parse (String text, int capacity)
     {
         return LineGenerators.runnableFrom( text.toCharArray() );
     }

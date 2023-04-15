@@ -13,7 +13,12 @@ public class LineSuppliers
 
     public static Supplier<String> from (Reader reader)
     {
-        return new ReaderSupplier(reader);
+        return new ReaderSupplier(reader,8192);
+    }
+
+    public static Supplier<String> from (Reader reader, int capacity)
+    {
+        return new ReaderSupplier(reader,capacity);
     }
 
     private static final class CharArraySupplier implements Supplier<String>
@@ -57,46 +62,59 @@ public class LineSuppliers
     {
         private final StringBuilder buffer = new StringBuilder();
 
-        private boolean hasNext = true;
+        private final char[] chars;
+
+        private int limit = 0;
+
+        private int position = 0;
 
         private final Reader reader;
 
-        ReaderSupplier (Reader reader)
+        ReaderSupplier (Reader reader, int capacity)
         {
+            this.chars = new char[capacity];
             this.reader = reader;
         }
 
         @Override
         public String get ()
         {
-            if (! hasNext) return null;
+            if (limit == -1) return null;
 
             try
             {
-                int c = -1;
-                while ((c = reader.read()) != -1)
+                while (true)
                 {
-                    if (c == '\r' || c == '\n') {
-                        final var line = buffer.toString();
-                        buffer.setLength(0);
-                        return line;
+                    if (position == limit) {
+                        limit = reader.read(chars);
+                        if (limit == -1) break;
+                        position = 0;
                     }
-                    else {
-                        buffer.append((char)c);
+
+                    for (int i = position, j = limit; i != j; ++i) {
+                        final char c = chars[i];
+                        if (c == '\r' || c == '\n') {
+                            final String line;
+                            if (buffer.isEmpty()) {
+                                line = new String(chars,position,i-position);
+                            }
+                            else {
+                                buffer.append(chars,position,i-position);
+                                line = buffer.toString();
+                                buffer.setLength(0);
+                            }
+                            position = i + 1;
+                            return line;
+                        }
                     }
+
+                    buffer.append(chars,position,limit-position);
+                    position = limit;
                 }
             }
             catch (IOException e) { throw new RuntimeException(e); }
 
-            hasNext = false;
-
-            if (! buffer.isEmpty()) {
-                final var line = buffer.toString();
-                buffer.setLength(0);
-                return line;
-            }
-
-            return null;
+            return buffer.isEmpty() ? null : buffer.toString();
         }
     }
 }

@@ -16,7 +16,12 @@ public class LineGenerators
 
     public static Supplier<String> abstractFrom (Reader reader)
     {
-        return new ReaderAbstractGenerator(reader);
+        return new ReaderAbstractGenerator(reader,8192);
+    }
+
+    public static Supplier<String> abstractFrom (Reader reader, int capacity)
+    {
+        return new ReaderAbstractGenerator(reader,capacity);
     }
 
     public static Supplier<String> runnableFrom (char[] chars)
@@ -26,7 +31,12 @@ public class LineGenerators
 
     public static Supplier<String> runnableFrom (Reader reader)
     {
-        return new RunnableLineGenerator(reader);
+        return new RunnableLineGenerator(reader,8192);
+    }
+
+    public static Supplier<String> runnableFrom (Reader reader, int capacity)
+    {
+        return new RunnableLineGenerator(reader,capacity);
     }
 
     private static final class CharArrayAbstractGenerator extends AbstractGenerator<String>
@@ -67,10 +77,13 @@ public class LineGenerators
 
     private static final class ReaderAbstractGenerator extends AbstractGenerator<String>
     {
+        private final int capacity;
+
         private final Reader reader;
 
-        public ReaderAbstractGenerator (Reader reader)
+        public ReaderAbstractGenerator (Reader reader, int capacity)
         {
+            this.capacity = capacity;
             this.reader = reader;
         }
 
@@ -78,19 +91,34 @@ public class LineGenerators
         protected void run ()
         {
             final var buffer = new StringBuilder();
+            final var chars = new char[capacity];
 
             try
             {
-                int c = -1;
-                while ((c = reader.read()) != -1)
+                while (true)
                 {
-                    if (c == '\r' || c == '\n') {
-                        this.yield( buffer.toString() );
-                        buffer.setLength(0);
+                    final int limit = reader.read(chars);
+                    if (limit == -1) break;
+                    int position = 0;
+
+                    for (int i = position; i != limit; ++i) {
+                        final char c = chars[i];
+                        if (c == '\r' || c == '\n') {
+                            final String line;
+                            if (buffer.isEmpty()) {
+                                line = new String(chars,position,i-position);
+                            }
+                            else {
+                                buffer.append(chars,position,i-position);
+                                line = buffer.toString();
+                                buffer.setLength(0);
+                            }
+                            position = i + 1;
+                            this.yield(line);
+                        }
                     }
-                    else {
-                        buffer.append((char)c);
-                    }
+
+                    buffer.append(chars,position,limit-position);
                 }
             }
             catch (IOException e) { throw new RuntimeException(e); }
@@ -110,9 +138,9 @@ public class LineGenerators
             super(() -> run(chars,offset,length));
         }
 
-        public RunnableLineGenerator (Reader reader)
+        public RunnableLineGenerator (Reader reader, int capacity)
         {
-            super(() -> run(reader));
+            super(() -> run(reader,capacity));
         }
 
         private static void run (char[] chars, int offset, int length)
@@ -135,22 +163,37 @@ public class LineGenerators
             RunnableGenerator.yield(null);
         }
 
-        private static void run (Reader reader)
+        private static void run (Reader reader, int capacity)
         {
             final var buffer = new StringBuilder();
+            final var chars = new char[capacity];
 
             try
             {
-                int c = -1;
-                while ((c = reader.read()) != -1)
+                while (true)
                 {
-                    if (c == '\r' || c == '\n') {
-                        RunnableGenerator.yield( buffer.toString() );
-                        buffer.setLength(0);
+                    final int limit = reader.read(chars);
+                    if (limit == -1) break;
+                    int position = 0;
+
+                    for (int i = position; i != limit; ++i) {
+                        final char c = chars[i];
+                        if (c == '\r' || c == '\n') {
+                            final String line;
+                            if (buffer.isEmpty()) {
+                                line = new String(chars,position,i-position);
+                            }
+                            else {
+                                buffer.append(chars,position,i-position);
+                                line = buffer.toString();
+                                buffer.setLength(0);
+                            }
+                            position = i + 1;
+                            RunnableGenerator.yield(line);
+                        }
                     }
-                    else {
-                        buffer.append((char)c);
-                    }
+
+                    buffer.append(chars,position,limit-position);
                 }
             }
             catch (IOException e) { throw new RuntimeException(e); }

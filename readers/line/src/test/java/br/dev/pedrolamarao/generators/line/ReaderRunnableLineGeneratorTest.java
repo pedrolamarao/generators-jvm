@@ -6,8 +6,8 @@ import java.util.function.Supplier;
 public class ReaderRunnableLineGeneratorTest extends LineTest
 {
     @Override
-    Supplier<String> parse (String text)
+    Supplier<String> parse (String text, int capacity)
     {
-        return LineGenerators.runnableFrom( new StringReader(text) );
+        return LineGenerators.runnableFrom( new StringReader(text), capacity );
     }
 }
