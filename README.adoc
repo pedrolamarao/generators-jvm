@@ -9,11 +9,13 @@ Applications are demonstrated in `readers`.
 
 == building
 
+Build is driven by Gradle.
+
 Have `JAVA_HOME` point to a JDK version up to 19.
 
 Unpack JDK 21 EA into `${rootDir}/jdk-21`.
 Alternatively, edit `${rootDir}/gradle.properties`.
-For more information, see: https://docs.gradle.org/8.1-rc-2/userguide/toolchains.html
+For more information, see: https://docs.gradle.org/8.1/userguide/toolchains.html
 
 To build and run automated tests: `./gradlew build`
 
@@ -32,7 +34,8 @@ java --add-exports java.base/jdk.internal.vm=ALL-UNNAMED --enable-preview -jar .
 
 The generators module require JDK version 21 with preview features enabled.
 
-JARs are currently not published anywhere.
+Because the generators refer to package `jdk.internal.vm` from module `java.base`,
+client code must force exporting that package by that module.
 
 To configure a Gradle consumer project:
 
