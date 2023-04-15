@@ -90,6 +90,34 @@ public class LineBenchmark
     }
 
     @Benchmark
+    public long consumerGeneratorFromCharArray ()
+    {
+        final var generator = LineGenerators.consumerFrom(chars);
+        int counter = 0;
+        while (true) {
+            final var line = generator.get();
+            if (line == null) break;
+            ++counter;
+        }
+        if (counter != count) throw new RuntimeException("unexpected counter: " + counter);
+        return counter;
+    }
+
+    @Benchmark
+    public long consumerGeneratorFromReader ()
+    {
+        final var generator = LineGenerators.consumerFrom( new CharArrayReader(chars) );
+        int counter = 0;
+        while (true) {
+            final var line = generator.get();
+            if (line == null) break;
+            ++counter;
+        }
+        if (counter != count) throw new RuntimeException("unexpected counter: " + counter);
+        return counter;
+    }
+
+    @Benchmark
     public long runnableGeneratorFromCharArray ()
     {
         final var generator = LineGenerators.runnableFrom(chars);

@@ -3,7 +3,23 @@ Pedro Lamarao <pedro.lamarao@gmail.com>
 
 Continuation-based generators for the JVM.
 
-Module `generators` contain the core classes, `AbstractGenerator` and `RunnableGenerator`.
+Module `generators` contain the core classes, `AbstractGenerator`, `ConsumerGenerator` and `RunnableGenerator`.
+
+`AbstractGenerator` defines the generator procedure as an abstract method.
+Concrete generators must extend from `AbstractGenerator`.
+The generator procedure has protected access to `this.yield`.
+Benchmarking indicates this imposes quite the overhead.
+
+`ConsumerGenerator` defines the generator as a functional object.
+Concrete generators may extend or aggregate `ConsumerGenerator`.
+The generator procedure receives `this::yield` as a parameter.
+Benchmarking indicates this imposes some overhead.
+
+`RunnableGenerator` defines the generator as a functional object.
+Concrete generators may extend or aggregate `RunnableGenerator`.
+The generator procedure has public static access to `RunnableGenerator.yield`.
+Benchmarking indicates this imposes the least overhead.
+However, it cannot type check the yielded value!
 
 Applications are demonstrated in `readers`.
 
