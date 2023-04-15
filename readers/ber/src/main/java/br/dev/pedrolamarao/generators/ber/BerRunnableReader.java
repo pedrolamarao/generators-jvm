@@ -5,19 +5,14 @@ import br.dev.pedrolamarao.generators.RunnableGenerator;
 import java.io.IOException;
 import java.io.InputStream;
 
-public final class BerRunnableReader implements BerReader
+public final class BerRunnableReader extends RunnableGenerator<BerObject> implements BerReader
 {
-    private final RunnableGenerator<BerObject> generator;
-
-    private final InputStream stream;
-
-    public BerRunnableReader(InputStream stream)
+    public BerRunnableReader (InputStream stream)
     {
-        this.generator = new RunnableGenerator<>(this::run);
-        this.stream = stream;
+        super(() -> run(stream));
     }
 
-    void run ()
+    static void run (InputStream stream)
     {
         try
         {
@@ -25,11 +20,5 @@ public final class BerRunnableReader implements BerReader
             RunnableGenerator.yield(null);
         }
         catch (IOException e) { throw new RuntimeException(e); }
-    }
-
-    @Override
-    public BerObject read ()
-    {
-        return generator.get();
     }
 }

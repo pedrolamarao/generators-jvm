@@ -1,6 +1,7 @@
 package br.dev.pedrolamarao.generators.ber;
 
-public interface BerReader
+import java.util.function.Supplier;
+
+public interface BerReader extends Supplier<BerObject>
 {
-    BerObject read ();
 }

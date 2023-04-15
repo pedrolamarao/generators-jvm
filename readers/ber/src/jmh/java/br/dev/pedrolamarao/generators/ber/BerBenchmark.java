@@ -33,7 +33,7 @@ public class BerBenchmark
         final var reader = new BerAbstractReader( new ByteArrayInputStream( it.data ) );
         long counter = 0;
         while (true) {
-            final var next = reader.read();
+            final var next = reader.get();
             if (next == null) break;
             ++counter;
         }
@@ -82,7 +82,7 @@ public class BerBenchmark
         final var reader = new BerRunnableReader( new ByteArrayInputStream( it.data ) );
         long counter = 0;
         while (true) {
-            final var next = reader.read();
+            final var next = reader.get();
             if (next == null) break;
             ++counter;
         }

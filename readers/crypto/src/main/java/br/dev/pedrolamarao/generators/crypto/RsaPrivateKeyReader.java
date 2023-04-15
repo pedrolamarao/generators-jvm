@@ -12,40 +12,40 @@ public final class RsaPrivateKeyReader
 {
     public static RSAPrivateKey read(BerReader reader)
     {
-        if (! (reader.read() instanceof BerOpen))
+        if (! (reader.get() instanceof BerOpen))
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerInteger version))
+        if (! (reader.get() instanceof BerInteger version))
             throw new RuntimeException();
 
         if (! version.asBigInteger().equals(BigInteger.ZERO))
             throw new RuntimeException("unsupported version");
 
-        if (! (reader.read() instanceof BerInteger modulus))
+        if (! (reader.get() instanceof BerInteger modulus))
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerInteger publicExponent))
+        if (! (reader.get() instanceof BerInteger publicExponent))
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerInteger privateExponent))
+        if (! (reader.get() instanceof BerInteger privateExponent))
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerInteger prime1))
+        if (! (reader.get() instanceof BerInteger prime1))
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerInteger prime2))
+        if (! (reader.get() instanceof BerInteger prime2))
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerInteger exponent1))
+        if (! (reader.get() instanceof BerInteger exponent1))
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerInteger exponent2))
+        if (! (reader.get() instanceof BerInteger exponent2))
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerInteger coefficient))
+        if (! (reader.get() instanceof BerInteger coefficient))
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerClose))
+        if (! (reader.get() instanceof BerClose))
             throw new RuntimeException();
 
         return new RsaPrivateKeyImpl(privateExponent.asBigInteger(),modulus.asBigInteger());

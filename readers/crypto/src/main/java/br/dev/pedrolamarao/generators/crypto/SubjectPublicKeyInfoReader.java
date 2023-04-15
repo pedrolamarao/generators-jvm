@@ -18,15 +18,15 @@ public final class SubjectPublicKeyInfoReader
 {
     public static PublicKey read (BerReader reader)
     {
-        if (! (reader.read() instanceof BerOpen))
+        if (! (reader.get() instanceof BerOpen))
             throw new RuntimeException();
 
         final var algorithmIdentifier = AlgorithmIdentifierReader.read(reader);
 
-        if (! (reader.read() instanceof BerBits subjectPublicKey))
+        if (! (reader.get() instanceof BerBits subjectPublicKey))
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerClose))
+        if (! (reader.get() instanceof BerClose))
             throw new RuntimeException();
 
         final var keyBytes = subjectPublicKey.bytes();

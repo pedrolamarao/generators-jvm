@@ -16,10 +16,10 @@ public final class PrivateKeyInfoReader
 {
     public static PrivateKey read (BerReader reader)
     {
-        if (! (reader.read() instanceof BerOpen))
+        if (! (reader.get() instanceof BerOpen))
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerInteger version))
+        if (! (reader.get() instanceof BerInteger version))
             throw new RuntimeException();
 
         if (! version.asBigInteger().equals(BigInteger.ZERO))
@@ -27,10 +27,10 @@ public final class PrivateKeyInfoReader
 
         final var algorithmIdentifier = AlgorithmIdentifierReader.read(reader);
 
-        if (! (reader.read() instanceof BerBytes privateKey))
+        if (! (reader.get() instanceof BerBytes privateKey))
             throw new RuntimeException();
 
-        if (! (reader.read() instanceof BerClose))
+        if (! (reader.get() instanceof BerClose))
             throw new RuntimeException();
 
         final var algorithmBytes = algorithmIdentifier.algorithm().bytes();

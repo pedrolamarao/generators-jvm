@@ -21,41 +21,41 @@ public abstract class BerGeneratorTest
 
         final var subjectPublicKeyInfoReader = create( new ByteArrayInputStream( keys.getPublic().getEncoded() ) );
         // open: subjectPublicKeyInfo
-        assertThat( subjectPublicKeyInfoReader.read(), isA(BerOpen.class) );
+        assertThat( subjectPublicKeyInfoReader.get(), isA(BerOpen.class) );
         // open: subjectPublicKeyInfo.algorithm : AlgorithmIdentifier
-        assertThat( subjectPublicKeyInfoReader.read(), isA(BerOpen.class) );
+        assertThat( subjectPublicKeyInfoReader.get(), isA(BerOpen.class) );
         // algorithmIdentifier.algorithm : OBJECT IDENTIFIER
-        assertThat( subjectPublicKeyInfoReader.read(), isA(BerObjectIdentifier.class) );
+        assertThat( subjectPublicKeyInfoReader.get(), isA(BerObjectIdentifier.class) );
         // algorithmIdentifier.parameters : ANY
-        assertThat( subjectPublicKeyInfoReader.read(), isA(BerNull.class) );
+        assertThat( subjectPublicKeyInfoReader.get(), isA(BerNull.class) );
         // close: subjectPublicKeyInfo.algorithm : algorithmIdentifier
-        assertThat( subjectPublicKeyInfoReader.read(), isA(BerClose.class) );
+        assertThat( subjectPublicKeyInfoReader.get(), isA(BerClose.class) );
         // subjectPublicKeyInfo.subjectPublicKey : BIT STRING
-        assertThat( subjectPublicKeyInfoReader.read(), isA(BerBits.class) );
+        assertThat( subjectPublicKeyInfoReader.get(), isA(BerBits.class) );
         // close: subjectPublicKeyInfo
-        assertThat( subjectPublicKeyInfoReader.read(), isA(BerClose.class) );
+        assertThat( subjectPublicKeyInfoReader.get(), isA(BerClose.class) );
         // finish
-        assertThat( subjectPublicKeyInfoReader.read(), nullValue() );
+        assertThat( subjectPublicKeyInfoReader.get(), nullValue() );
 
         final var privateKeyInfoReader = create( new ByteArrayInputStream( keys.getPrivate().getEncoded() ) );
         // open: privateKeyInfo
-        assertThat( privateKeyInfoReader.read(), isA(BerOpen.class) );
+        assertThat( privateKeyInfoReader.get(), isA(BerOpen.class) );
         // privateKeyInfo.version : INTEGER
-        assertThat( privateKeyInfoReader.read(), isA(BerInteger.class) );
+        assertThat( privateKeyInfoReader.get(), isA(BerInteger.class) );
         // open: privateKeyInfo.privateKeyAlgorithm : AlgorithmIdentifier
-        assertThat( privateKeyInfoReader.read(), isA(BerOpen.class) );
+        assertThat( privateKeyInfoReader.get(), isA(BerOpen.class) );
         // algorithmIdentifier.algorithm : OBJECT IDENTIFIER
-        assertThat( privateKeyInfoReader.read(), isA(BerObjectIdentifier.class) );
+        assertThat( privateKeyInfoReader.get(), isA(BerObjectIdentifier.class) );
         // algorithmIdentifier.parameters : ANY
-        assertThat( privateKeyInfoReader.read(), isA(BerNull.class) );
+        assertThat( privateKeyInfoReader.get(), isA(BerNull.class) );
         // close: privateKeyInfo.algorithm : AlgorithmIdentifier
-        assertThat( privateKeyInfoReader.read(), isA(BerClose.class) );
+        assertThat( privateKeyInfoReader.get(), isA(BerClose.class) );
         // privateKeyInfo.privateKey : OCTET STRING
-        assertThat( privateKeyInfoReader.read(), isA(BerBytes.class) );
+        assertThat( privateKeyInfoReader.get(), isA(BerBytes.class) );
         // close: privateKeyInfo
-        assertThat( privateKeyInfoReader.read(), isA(BerClose.class) );
+        assertThat( privateKeyInfoReader.get(), isA(BerClose.class) );
         // finish
-        assertThat( privateKeyInfoReader.read(), nullValue() );
+        assertThat( privateKeyInfoReader.get(), nullValue() );
 
     }
 }
