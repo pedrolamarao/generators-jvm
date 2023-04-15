@@ -3,8 +3,8 @@ package br.dev.pedrolamarao.generators.line;
 import org.openjdk.jmh.annotations.*;
 
 import java.io.BufferedReader;
+import java.io.CharArrayReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
@@ -17,12 +17,12 @@ public class LineBenchmark
     @Param({"1024"})
     int count;
 
-    String data;
+    char[] chars;
 
     @Benchmark
     public long base () throws IOException
     {
-        final var reader = new BufferedReader( new StringReader(data) );
+        final var reader = new BufferedReader( new CharArrayReader(chars) );
         int counter = 0;
         while (true) {
             final var line = reader.readLine();
@@ -37,7 +37,7 @@ public class LineBenchmark
     public long supplierFromCharArray ()
     {
         int counter = 0;
-        final var supplier = LineSuppliers.from( data.toCharArray() );
+        final var supplier = LineSuppliers.from(chars);
         while (true) {
             final var line = supplier.get();
             if (line == null) break;
@@ -51,7 +51,7 @@ public class LineBenchmark
     public long supplierFromReader ()
     {
         int counter = 0;
-        final var supplier = LineSuppliers.from( new StringReader(data) );
+        final var supplier = LineSuppliers.from( new CharArrayReader(chars) );
         while (true) {
             final var line = supplier.get();
             if (line == null) break;
@@ -64,10 +64,10 @@ public class LineBenchmark
     @Benchmark
     public long abstractGeneratorFromCharArray ()
     {
-        final var reader = LineGenerators.abstractFrom( data.toCharArray() );
+        final var generator = LineGenerators.abstractFrom(chars);
         int counter = 0;
         while (true) {
-            final var line = reader.get();
+            final var line = generator.get();
             if (line == null) break;
             ++counter;
         }
@@ -78,10 +78,10 @@ public class LineBenchmark
     @Benchmark
     public long abstractGeneratorFromReader ()
     {
-        final var reader = LineGenerators.abstractFrom( new StringReader(data) );
+        final var generator = LineGenerators.abstractFrom( new CharArrayReader(chars) );
         int counter = 0;
         while (true) {
-            final var line = reader.get();
+            final var line = generator.get();
             if (line == null) break;
             ++counter;
         }
@@ -92,10 +92,10 @@ public class LineBenchmark
     @Benchmark
     public long runnableGeneratorFromCharArray ()
     {
-        final var reader = LineGenerators.runnableFrom( data.toCharArray() );
+        final var generator = LineGenerators.runnableFrom(chars);
         int counter = 0;
         while (true) {
-            final var line = reader.get();
+            final var line = generator.get();
             if (line == null) break;
             ++counter;
         }
@@ -106,10 +106,10 @@ public class LineBenchmark
     @Benchmark
     public long runnableGeneratorFromReader ()
     {
-        final var reader = LineGenerators.runnableFrom( new StringReader(data) );
+        final var generator = LineGenerators.runnableFrom( new CharArrayReader(chars) );
         int counter = 0;
         while (true) {
-            final var line = reader.get();
+            final var line = generator.get();
             if (line == null) break;
             ++counter;
         }
@@ -128,6 +128,6 @@ public class LineBenchmark
                 chars[chars.length-1] = '\n';
                 builder.append(chars);
             });
-        data = builder.toString();
+        chars = builder.toString().toCharArray();
     }
 }
