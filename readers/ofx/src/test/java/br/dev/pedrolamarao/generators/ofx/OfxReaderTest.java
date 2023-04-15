@@ -15,8 +15,8 @@ public class OfxReaderTest
         {
             assert stream != null;
             final var reader = OfxReader.from(stream);
-            assertThat(reader.read()).isInstanceOf(OfxHeader.class);
-            assertThat(reader.read()).isNull();
+            assertThat(reader.get()).isInstanceOf(OfxHeader.class);
+            assertThat(reader.get()).isNull();
         }
     }
 
@@ -27,8 +27,8 @@ public class OfxReaderTest
         {
             assert stream != null;
             final var reader = OfxReader.from(stream);
-            assertThat(reader.read()).isInstanceOf(OfxHeader.class);
-            assertThat(reader.read()).isNull();
+            assertThat(reader.get()).isInstanceOf(OfxHeader.class);
+            assertThat(reader.get()).isNull();
         }
     }
 }

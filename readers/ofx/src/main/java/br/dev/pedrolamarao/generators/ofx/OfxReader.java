@@ -5,23 +5,16 @@ import br.dev.pedrolamarao.generators.RunnableGenerator;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class OfxReader
+public class OfxReader extends RunnableGenerator<OfxObject>
 {
-    private final RunnableGenerator<OfxObject> generator;
-
-    private OfxReader (RunnableGenerator<OfxObject> generator)
+    private OfxReader (Runnable runnable)
     {
-        this.generator = generator;
+        super(runnable);
     }
 
     public static OfxReader from (InputStream stream)
     {
-        return new OfxReader( new RunnableGenerator<>(() -> run(stream)) );
-    }
-
-    public OfxObject read ()
-    {
-        return generator.get();
+        return new OfxReader(() -> run(stream));
     }
 
     private static void run (InputStream stream)
