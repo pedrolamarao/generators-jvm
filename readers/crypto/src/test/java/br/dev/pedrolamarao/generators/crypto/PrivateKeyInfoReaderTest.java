@@ -21,6 +21,7 @@ public class PrivateKeyInfoReaderTest
         final var generated = (ECPrivateKey) keys.getPrivate();
         final var encoded = keys.getPrivate().getEncoded();
         final var parsed = (ECPrivateKey) PrivateKeyInfoReader.read( new BerAbstractReader( new ByteArrayInputStream(encoded) ) );
+        assertThat( parsed.getS(), equalTo( generated.getS() ) );
         assertThat( parsed.getParams(), equalTo( generated.getParams() ) );
     }
 
@@ -42,6 +43,7 @@ public class PrivateKeyInfoReaderTest
         final var generated = (ECPrivateKey) keys.getPrivate();
         final var encoded = keys.getPrivate().getEncoded();
         final var parsed = (ECPrivateKey) PrivateKeyInfoReader.read( new BerRunnableReader( new ByteArrayInputStream(encoded) ) );
+        assertThat( parsed.getS(), equalTo( generated.getS() ) );
         assertThat( parsed.getParams(), equalTo( generated.getParams() ) );
     }
 
