@@ -8,7 +8,7 @@ dependencies {
 }
 
 tasks.compileJava.configure {
-    options.compilerArgs = listOf("--add-exports","java.base/jdk.internal.vm=br.dev.pedrolamarao.generators","--enable-preview")
+    options.compilerArgs = listOf("--add-exports","java.base/jdk.internal.vm=br.dev.pedrolamarao.generators")
 }
 
 jmh {
