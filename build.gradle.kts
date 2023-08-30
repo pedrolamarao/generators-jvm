@@ -24,6 +24,7 @@ subprojects {
     }
     plugins.withType<JMHPlugin>().configureEach {
         extensions.configure<JmhParameters> {
+            benchmarkMode = listOf("sample")
             fork.set(1)
             iterations.set(1)
             jvmArgs.set( listOf("--add-exports","java.base/jdk.internal.vm=ALL-UNNAMED","--enable-preview") )
