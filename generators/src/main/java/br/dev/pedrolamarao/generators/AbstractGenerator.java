@@ -27,7 +27,7 @@ public abstract class AbstractGenerator<T> implements Supplier<T>
 
     protected abstract void run ();
 
-    protected final void yield (T value)
+    protected final void jield (T value)
     {
         next = value;
         Continuation.yield(scope);

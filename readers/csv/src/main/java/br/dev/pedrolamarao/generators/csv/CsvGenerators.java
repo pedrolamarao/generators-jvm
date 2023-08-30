@@ -65,16 +65,16 @@ public class CsvGenerators
             for (int i = position, j = limit; i != j; ++i) {
                 final char c = chars[i];
                 if (c == '\r' || c == '\n') {
-                    this.yield( new String(chars, position, i - position).split(separator,-1) );
+                    this.jield( new String(chars, position, i - position).split(separator,-1) );
                     position = i + 1;
                 }
             }
 
             if (position < limit) {
-                this.yield( new String(chars, position, limit - position).split(separator,-1) );
+                this.jield( new String(chars, position, limit - position).split(separator,-1) );
             }
 
-            this.yield(null);
+            this.jield(null);
         }
     }
 
@@ -120,7 +120,7 @@ public class CsvGenerators
                                 buffer.setLength(0);
                             }
                             position = i + 1;
-                            this.yield(line.split(separator,-1));
+                            this.jield(line.split(separator,-1));
                         }
                     }
 
@@ -130,10 +130,10 @@ public class CsvGenerators
             catch (IOException e) { throw new RuntimeException(e); }
 
             if (! buffer.isEmpty()) {
-                this.yield( buffer.toString().split(separator,-1) );
+                this.jield( buffer.toString().split(separator,-1) );
             }
 
-            this.yield(null);
+            this.jield(null);
         }
     }
 

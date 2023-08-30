@@ -19,8 +19,8 @@ public final class BerAbstractReader extends AbstractGenerator<BerObject> implem
     {
         try
         {
-            BerParser.parse(stream,this::yield);
-            this.yield(null);
+            BerParser.parse(stream,this::jield);
+            this.jield(null);
         }
         catch (IOException e) { throw new RuntimeException(e); }
     }

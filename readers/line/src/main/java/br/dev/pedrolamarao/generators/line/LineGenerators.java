@@ -79,16 +79,16 @@ public class LineGenerators
             for (int i = position, j = limit; i != j; ++i) {
                 final char c = chars[i];
                 if (c == '\r' || c == '\n') {
-                    this.yield( new String(chars, position, i - position) );
+                    this.jield( new String(chars, position, i - position) );
                     position = i + 1;
                 }
             }
 
             if (position < limit) {
-                this.yield( new String(chars, position, limit - position) );
+                this.jield( new String(chars, position, limit - position) );
             }
 
-            this.yield(null);
+            this.jield(null);
         }
     }
 
@@ -131,7 +131,7 @@ public class LineGenerators
                                 buffer.setLength(0);
                             }
                             position = i + 1;
-                            this.yield(line);
+                            this.jield(line);
                         }
                     }
 
@@ -141,10 +141,10 @@ public class LineGenerators
             catch (IOException e) { throw new RuntimeException(e); }
 
             if (! buffer.isEmpty()) {
-                this.yield( buffer.toString() );
+                this.jield( buffer.toString() );
             }
 
-            this.yield(null);
+            this.jield(null);
         }
     }
 
